@@ -2,7 +2,7 @@ import sys
 from styles import *
 from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
 from PySide6.QtWidgets import *
-from views import MenuMainView
+from views import *
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -10,8 +10,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("My App")
 
         self.layout = QHBoxLayout()
-
-        self.setView(MenuMainView())
+        defaultView = ReservationMainView()
+        self.setView(defaultView)
 
         container = QWidget()
         container.setLayout(self.layout)
