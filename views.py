@@ -102,3 +102,28 @@ class ReservationMainView():
         # ----ADD-RIGHT-WIDGETS --------
         self.rlayout.addWidget(self.slider)
         self.rlayout.addWidget(self.tlocrt)
+
+class ReceiptMainView():
+    def __init__(self):
+        # ---------LAYOUTS--------------
+        self.llayout = QVBoxLayout()
+        self.rlayout = QVBoxLayout()
+
+        # ---------WIDGETS--------------
+        self.tlocrt = QLabel("Racuni")
+        self.calendar = QCalendarWidget()
+        self.search = QLineEdit()
+
+
+        # ---------STYLES---------------
+        self.tlocrt.setStyleSheet(tlo)
+        self.calendar.setStyleSheet(cal)
+        self.search.setStyleSheet("max-width:250px;")
+        self.llayout.setAlignment(Qt.AlignTop)
+
+        # -----ADD-LEFT-WIDGETS --------
+        self.llayout.addWidget(self.calendar)
+
+        # ----ADD-RIGHT-WIDGETS --------
+        self.rlayout.addWidget(self.search)
+        self.rlayout.addWidget(self.tlocrt)
