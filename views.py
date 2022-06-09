@@ -72,3 +72,33 @@ class MenuMainView():
         self.rtop.addWidget(self.search)
         self.rtop.addWidget(self.addItem)
         self.rlayout.addWidget(self.table)
+
+class ReservationMainView():
+    def __init__(self):
+        # ---------LAYOUTS--------------
+        self.llayout = QVBoxLayout()
+        self.rlayout = QVBoxLayout()
+
+        # ---------WIDGETS--------------
+        self.add = QPushButton("+ Reservation")
+        self.tlocrt = QLabel("Tlocrt")
+        self.calendar = QCalendarWidget()
+        self.slider = QSlider(Qt.Horizontal)
+        self.labels = QLabel("""
+                - Free
+                - Taken
+                - Reserved""")
+
+        # ---------STYLES---------------
+        self.tlocrt.setStyleSheet(tlo)
+        self.calendar.setStyleSheet(cal)
+        self.llayout.setAlignment(Qt.AlignTop)
+
+        # -----ADD-LEFT-WIDGETS --------
+        self.llayout.addWidget(self.add)
+        self.llayout.addWidget(self.calendar)
+        self.llayout.addWidget(self.labels)
+
+        # ----ADD-RIGHT-WIDGETS --------
+        self.rlayout.addWidget(self.slider)
+        self.rlayout.addWidget(self.tlocrt)
