@@ -12,3 +12,13 @@ add = """
 menu = """
     text-align:left;
 """
+cal = """
+    max-width:300px;
+    max-height:250px;
+"""
+
+tlo = """
+    min-width:600px;
+    min-height:400px;
+    border :2px solid blue;
+"""
