@@ -1,5 +1,5 @@
 import sys
-from styles import textInput
+from styles import *
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QApplication,
@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QWidget,
     QHBoxLayout,
+    QVBoxLayout,
 ) 
 
 class MainWindow(QMainWindow):
@@ -16,13 +17,27 @@ class MainWindow(QMainWindow):
         super().__init__() 
         self.setWindowTitle("My App")
         self.label = QLabel()
-        self.label.setStyleSheet(textInput)
+        self.label.setStyleSheet(qss1)
+        self.label2 = QLabel()
+        self.label2.setStyleSheet(qss2)
         
-        layout = QHBoxLayout() 
-        layout.addWidget(self.label)
+        layout = QHBoxLayout()
+        layout_left = QVBoxLayout()
+        layout_right = QVBoxLayout()
+
+        layout.addLayout(layout_left)
+        layout.addLayout(layout_right)
+
+        layout_left.addWidget(self.label)
+        layout_right.addWidget(self.label2)
 
         container = QWidget()
         container.setLayout(layout)
+
+        menu = self.menuBar()
+        menuItems = ["Meni","Rezervacije","Racuni","Radnici","About"]
+        for m in menuItems:
+            file_menu = menu.addMenu(m)
 
         # Set the central widget of the Window.
         self.setCentralWidget(container)
