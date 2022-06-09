@@ -1,38 +1,20 @@
 import sys
 from styles import *
-from PySide6.QtCore import QSize, Qt
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QPushButton,
-    QLabel,
-    QLineEdit,
-    QWidget,
-    QHBoxLayout,
-    QVBoxLayout,
-) 
+from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
+from PySide6.QtWidgets import *
+from views import MenuMainView
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__() 
         self.setWindowTitle("My App")
-        self.label = QLabel()
-        self.label.setStyleSheet(qss1)
-        self.label2 = QLabel()
-        self.label2.setStyleSheet(qss2)
-        
-        layout = QHBoxLayout()
-        layout_left = QVBoxLayout()
-        layout_right = QVBoxLayout()
 
-        layout.addLayout(layout_left)
-        layout.addLayout(layout_right)
+        self.layout = QHBoxLayout()
 
-        layout_left.addWidget(self.label)
-        layout_right.addWidget(self.label2)
+        self.setView(MenuMainView())
 
         container = QWidget()
-        container.setLayout(layout)
+        container.setLayout(self.layout)
 
         menu = self.menuBar()
         menuItems = ["Meni","Rezervacije","Racuni","Radnici","About"]
@@ -41,6 +23,11 @@ class MainWindow(QMainWindow):
 
         # Set the central widget of the Window.
         self.setCentralWidget(container)
+        #self.showFullScreen()
+
+    def setView(self, View):
+        self.layout.addLayout(View.llayout)
+        self.layout.addLayout(View.rlayout)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
