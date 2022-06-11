@@ -1,6 +1,7 @@
 import sys
 from styles import *
 from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
+from PySide6.QtGui import QAction
 from PySide6.QtWidgets import *
 from views import *
 
@@ -10,16 +11,32 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("My App")
 
         self.layout = QHBoxLayout()
-        defaultView = ReservationMainView()
+        defaultView = ReceiptMainView()
         self.setView(defaultView)
 
         container = QWidget()
         container.setLayout(self.layout)
 
+        views = {
+            "menu": QAction("Meni",self),
+            "rezervacije": QAction("Raspored",self),
+            "raspored": QAction("Rezervacije",self),
+            "racuni": QAction("Racuni",self),
+            "radnici": QAction("Radnici",self),
+        }
+
         menu = self.menuBar()
-        menuItems = ["Meni","Rezervacije","Racuni","Radnici","About"]
-        for m in menuItems:
-            file_menu = menu.addMenu(m)
+
+        # ----------ADD-MENUS-----------------
+        self.views_menu = menu.addMenu("File")
+        self.about_menu = menu.addMenu("About")
+
+        # ----------ADD-MENU-ACTIONS---------------
+        self.views_menu.addAction(views["menu"])
+        self.views_menu.addAction(views["raspored"])
+        self.views_menu.addAction(views["rezervacije"])
+        self.views_menu.addAction(views["racuni"])
+        self.views_menu.addAction(views["radnici"])
 
         # Set the central widget of the Window.
         self.setCentralWidget(container)
