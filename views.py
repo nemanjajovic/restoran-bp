@@ -5,12 +5,12 @@ from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 
 class TableModel(QAbstractTableModel):
-    def __init__(self):
+    def __init__(self, col=[], rows=[]):
         super().__init__()
         self._data = pd.DataFrame(
             [],
-            columns=["gasd", "test", "ashd"],
-            index=["Pygdssdg", "Row 2", "Row 3", "Row 4", "Row 5"],
+            columns = col,
+            index = rows,
         )
 
     def data(self, index, role):
@@ -34,6 +34,7 @@ class TableModel(QAbstractTableModel):
 
 class MenuMainView():
     def __init__(self):
+        columns = ["gasdgsad", "shdah", "ASF"]
         # ---------LAYOUTS--------------
         self.llayout = QVBoxLayout()
         self.rlayout = QVBoxLayout()
@@ -50,7 +51,7 @@ class MenuMainView():
         self.butt2 = QPushButton("HRANA")
 
         self.table = QtWidgets.QTableView()
-        self.tableWidget = TableModel()
+        self.tableWidget = TableModel(columns)
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
@@ -92,6 +93,7 @@ class ReservationMainView():
         # ---------STYLES---------------
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
+        self.labels.setAlignment(Qt.AlignBottom)
         self.llayout.setAlignment(Qt.AlignTop)
 
         # -----ADD-LEFT-WIDGETS --------
@@ -105,25 +107,31 @@ class ReservationMainView():
 
 class ReceiptMainView():
     def __init__(self):
+        columns = ["gasdgsad", "shdah", "ASF"]
         # ---------LAYOUTS--------------
         self.llayout = QVBoxLayout()
         self.rlayout = QVBoxLayout()
+        self.rtop    = QHBoxLayout()
+
+        self.rlayout.addLayout(self.rtop)
 
         # ---------WIDGETS--------------
-        self.tlocrt = QLabel("Racuni")
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
 
+        self.table = QtWidgets.QTableView()
+        self.tableWidget = TableModel(columns)
+        self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
-        self.search.setStyleSheet("max-width:250px;")
+        self.search.setStyleSheet(search)
         self.llayout.setAlignment(Qt.AlignTop)
+        self.rtop.setAlignment(Qt.AlignLeft)
 
         # -----ADD-LEFT-WIDGETS --------
         self.llayout.addWidget(self.calendar)
 
         # ----ADD-RIGHT-WIDGETS --------
-        self.rlayout.addWidget(self.search)
-        self.rlayout.addWidget(self.tlocrt)
+        self.rtop.addWidget(self.search)
+        self.rlayout.addWidget(self.table)
