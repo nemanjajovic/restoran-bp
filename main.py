@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
 
         container = QWidget()
         container.setLayout(self.layout)
-
+        
         views = {
             "menu": QAction("Meni",self),
             "rezervacije": QAction("Raspored",self),
@@ -24,14 +24,24 @@ class MainWindow(QMainWindow):
             "racuni": QAction("Racuni",self),
             "radnici": QAction("Radnici",self),
         }
-
+        file = {
+            "mkbkp": QAction("Make Backup",self),
+            "opbkp": QAction("Open Backup",self),
+            "opt":   QAction("Settings",self),
+            "exit":   QAction("Exit",self),
+        }
         menu = self.menuBar()
 
         # ----------ADD-MENUS-----------------
-        self.views_menu = menu.addMenu("File")
+        self.file_menu = menu.addMenu("File")
+        self.views_menu = menu.addMenu("View")
         self.about_menu = menu.addMenu("About")
 
         # ----------ADD-MENU-ACTIONS---------------
+        self.file_menu.addAction(file["mkbkp"])
+        self.file_menu.addAction(file["opbkp"])
+        self.file_menu.addAction(file["opt"])
+        self.file_menu.addAction(file["exit"])
         self.views_menu.addAction(views["menu"])
         self.views_menu.addAction(views["raspored"])
         self.views_menu.addAction(views["rezervacije"])
@@ -41,6 +51,11 @@ class MainWindow(QMainWindow):
         # Set the central widget of the Window.
         self.setCentralWidget(container)
         #self.showFullScreen()
+
+        
+
+    def p(self, s):
+        print("dgasdsgsgd")
 
     def setView(self, View):
         self.layout.addLayout(View.llayout)
