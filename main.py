@@ -13,13 +13,17 @@ class MainWindow(QMainWindow):
         self.layout = QStackedWidget()
 
         self.layout.addWidget(MenuMainView())
+        self.layout.addWidget(ScheduleMainView())
+        self.layout.addWidget(ReservationMainView())
         self.layout.addWidget(ReceiptMainView())
+        self.layout.addWidget(WorkersMainView())
+
         self.layout.setCurrentIndex(0)
         
         views = {
             "menu": QAction("Meni",self),
-            "rezervacije": QAction("Raspored",self),
-            "raspored": QAction("Rezervacije",self),
+            "raspored": QAction("Raspored",self),
+            "rezervacije": QAction("Rezervacije",self),
             "racuni": QAction("Racuni",self),
             "radnici": QAction("Radnici",self),
         }
@@ -69,6 +73,7 @@ class MainWindow(QMainWindow):
 
     def switch_view(self, index):
         self.layout.setCurrentIndex(index)
+        #self.setFixedWidth(1000)
 
 
 if __name__ == "__main__":
