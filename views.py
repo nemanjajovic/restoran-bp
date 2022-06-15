@@ -32,16 +32,23 @@ class TableModel(QAbstractTableModel):
             #if orientation == Qt.Vertical:
              #   return str(self._data.index[section])
 
-class MenuMainView():
+class MenuMainView(QtWidgets.QWidget):
     def __init__(self):
+        super().__init__()
         columns = ["gasdgsad", "shdah", "ASF"]
         # ---------LAYOUTS--------------
+        self.layout = QHBoxLayout()
+
         self.llayout = QVBoxLayout()
         self.rlayout = QVBoxLayout()
         self.rtop    = QHBoxLayout()
 
         self.rlayout.addLayout(self.rtop)
         self.rtop.setAlignment(Qt.AlignLeft)
+        self.layout.addLayout(self.llayout)
+        self.layout.addLayout(self.rlayout)
+
+        self.setLayout(self.layout)
 
         # ---------WIDGETS--------------
         self.label = QLabel()
@@ -74,11 +81,18 @@ class MenuMainView():
         self.rtop.addWidget(self.addItem)
         self.rlayout.addWidget(self.table)
 
-class ReservationMainView():
+class ReservationMainView(QtWidgets.QWidget):
     def __init__(self):
+        super().__init__()
         # ---------LAYOUTS--------------
+        self.layout = QHBoxLayout()
         self.llayout = QVBoxLayout()
         self.rlayout = QVBoxLayout()
+
+        self.layout.addLayout(self.llayout)
+        self.layout.addLayout(self.rlayout)
+
+        self.setLayout(self.layout)
 
         # ---------WIDGETS--------------
         self.add = QPushButton("+ Reservation")
@@ -105,15 +119,22 @@ class ReservationMainView():
         self.rlayout.addWidget(self.slider)
         self.rlayout.addWidget(self.tlocrt)
 
-class ReceiptMainView():
+class ReceiptMainView(QtWidgets.QWidget):
     def __init__(self):
+        super().__init__()
         columns = ["gasdgsad", "shdah", "ASF"]
         # ---------LAYOUTS--------------
+        self.layout = QHBoxLayout()
+
         self.llayout = QVBoxLayout()
         self.rlayout = QVBoxLayout()
         self.rtop    = QHBoxLayout()
 
         self.rlayout.addLayout(self.rtop)
+        self.layout.addLayout(self.llayout)
+        self.layout.addLayout(self.rlayout)
+
+        self.setLayout(self.layout)
 
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
@@ -135,3 +156,5 @@ class ReceiptMainView():
         # ----ADD-RIGHT-WIDGETS --------
         self.rtop.addWidget(self.search)
         self.rlayout.addWidget(self.table)
+
+        
