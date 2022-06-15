@@ -44,11 +44,7 @@ class MainWindow(QMainWindow):
         self.populate_views(views)
 
         # ---------CONNECT----------------------
-        views["menu"].triggered.connect(lambda:self.switch_view(0))
-        views["raspored"].triggered.connect(lambda:self.switch_view(1))
-        views["rezervacije"].triggered.connect(lambda:self.switch_view(2))
-        views["racuni"].triggered.connect(lambda:self.switch_view(3))
-        views["radnici"].triggered.connect(lambda:self.switch_view(4))
+        self.view_actions(views)
 
         # Set the central widget of the Window.
         self.setCentralWidget(self.layout)
@@ -67,7 +63,12 @@ class MainWindow(QMainWindow):
         self.views_menu.addAction(views["racuni"])
         self.views_menu.addAction(views["radnici"])
 
-        
+    def view_actions(self, views):
+        views["menu"].triggered.connect(lambda:self.switch_view(0))
+        views["raspored"].triggered.connect(lambda:self.switch_view(1))
+        views["rezervacije"].triggered.connect(lambda:self.switch_view(2))
+        views["racuni"].triggered.connect(lambda:self.switch_view(3))
+        views["radnici"].triggered.connect(lambda:self.switch_view(4))
 
     def switch_view(self, index):
         self.layout.setCurrentIndex(index)
