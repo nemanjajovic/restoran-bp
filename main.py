@@ -15,9 +15,6 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(MenuMainView())
         self.layout.addWidget(ReceiptMainView())
         self.layout.setCurrentIndex(0)
-
-        #self.container = QWidget()
-        #self.container.setLayout(self.layout)
         
         views = {
             "menu": QAction("Meni",self),
@@ -32,23 +29,23 @@ class MainWindow(QMainWindow):
             "opt":   QAction("Settings",self),
             "exit":   QAction("Exit",self),
         }
+        # ----------------MENU-------------------
         menu = self.menuBar()
 
-        # ----------ADD-MENUS-----------------
+        # ----------ADD-MENU-ITEMS---------------
         self.file_menu = menu.addMenu("File")
         self.views_menu = menu.addMenu("View")
         self.about_menu = menu.addMenu("About")
 
-        # ----------ADD-MENU-ACTIONS---------------
+        # ----------ADD-MENU-ACTIONS-------------
         self.populate_file(file)
         self.populate_views(views)
 
-        # ---------CONNECT----------------------
+        # ---------CONNECT-ACTIONS---------------
         self.view_actions(views)
 
         # Set the central widget of the Window.
         self.setCentralWidget(self.layout)
-        #self.showFullScreen()
 
     def populate_file(self, file):
         self.file_menu.addAction(file["mkbkp"])
