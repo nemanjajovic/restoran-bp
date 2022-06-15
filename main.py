@@ -12,8 +12,8 @@ class MainWindow(QMainWindow):
 
         self.layout = QStackedWidget()
 
-        self.layout.addWidget(ReceiptMainView())
         self.layout.addWidget(MenuMainView())
+        self.layout.addWidget(ReceiptMainView())
         self.layout.setCurrentIndex(0)
 
         #self.container = QWidget()
@@ -51,14 +51,18 @@ class MainWindow(QMainWindow):
         self.views_menu.addAction(views["radnici"])
 
         # ---------CONNECT----------------------
-        file["mkbkp"].triggered.connect(self.p)
+        views["menu"].triggered.connect(self.p(0))
+        views["raspored"].triggered.connect(self.p(1))
+        views["rezervacije"].triggered.connect(self.p(2))
+        views["racuni"].triggered.connect(self.p(3))
+        views["radnici"].triggered.connect(self.p(4))
 
         # Set the central widget of the Window.
         self.setCentralWidget(self.layout)
         #self.showFullScreen()
 
-    def p(self, s):
-        self.layout.setCurrentIndex(1)
+    def p(self, index):
+        self.layout.setCurrentIndex(index)
 
 
 if __name__ == "__main__":
