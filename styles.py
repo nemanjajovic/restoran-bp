@@ -11,6 +11,7 @@ add = """
 """
 menu = """
     text-align:left;
+    max-height: 20px;
 """
 cal = """
     max-width:300px;
@@ -21,4 +22,7 @@ tlo = """
     min-width:600px;
     min-height:400px;
     border :2px solid blue;
+"""
+naslov= """
+    max-height: 20px;
 """
