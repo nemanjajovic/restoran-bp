@@ -10,12 +10,14 @@ class MainWindow(QMainWindow):
         super().__init__() 
         self.setWindowTitle("My App")
 
-        self.layout = QHBoxLayout()
-        defaultView = ReceiptMainView()
-        self.setView(defaultView)
+        self.layout = QStackedWidget()
 
-        container = QWidget()
-        container.setLayout(self.layout)
+        self.layout.addWidget(ReceiptMainView())
+        self.layout.addWidget(MenuMainView())
+        self.layout.setCurrentIndex(0)
+
+        #self.container = QWidget()
+        #self.container.setLayout(self.layout)
         
         views = {
             "menu": QAction("Meni",self),
@@ -48,18 +50,16 @@ class MainWindow(QMainWindow):
         self.views_menu.addAction(views["racuni"])
         self.views_menu.addAction(views["radnici"])
 
+        # ---------CONNECT----------------------
+        file["mkbkp"].triggered.connect(self.p)
+
         # Set the central widget of the Window.
-        self.setCentralWidget(container)
+        self.setCentralWidget(self.layout)
         #self.showFullScreen()
 
-        
-
     def p(self, s):
-        print("dgasdsgsgd")
+        self.layout.setCurrentIndex(1)
 
-    def setView(self, View):
-        self.layout.addLayout(View.llayout)
-        self.layout.addLayout(View.rlayout)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
