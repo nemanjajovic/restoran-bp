@@ -51,17 +51,18 @@ class MainWindow(QMainWindow):
         self.views_menu.addAction(views["radnici"])
 
         # ---------CONNECT----------------------
-        views["menu"].triggered.connect(self.p(0))
-        views["raspored"].triggered.connect(self.p(1))
-        views["rezervacije"].triggered.connect(self.p(2))
-        views["racuni"].triggered.connect(self.p(3))
-        views["radnici"].triggered.connect(self.p(4))
+        views["menu"].triggered.connect(lambda:self.p(0))
+        views["raspored"].triggered.connect(lambda:self.p(1))
+        views["rezervacije"].triggered.connect(lambda:self.p(2))
+        views["racuni"].triggered.connect(lambda:self.p(3))
+        views["radnici"].triggered.connect(lambda:self.p(4))
 
         # Set the central widget of the Window.
         self.setCentralWidget(self.layout)
         #self.showFullScreen()
 
     def p(self, index):
+        print("Uslo")
         self.layout.setCurrentIndex(index)
 
 
