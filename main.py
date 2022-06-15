@@ -40,15 +40,8 @@ class MainWindow(QMainWindow):
         self.about_menu = menu.addMenu("About")
 
         # ----------ADD-MENU-ACTIONS---------------
-        self.file_menu.addAction(file["mkbkp"])
-        self.file_menu.addAction(file["opbkp"])
-        self.file_menu.addAction(file["opt"])
-        self.file_menu.addAction(file["exit"])
-        self.views_menu.addAction(views["menu"])
-        self.views_menu.addAction(views["raspored"])
-        self.views_menu.addAction(views["rezervacije"])
-        self.views_menu.addAction(views["racuni"])
-        self.views_menu.addAction(views["radnici"])
+        self.populate_file(file)
+        self.populate_views(views)
 
         # ---------CONNECT----------------------
         views["menu"].triggered.connect(lambda:self.switch_view(0))
@@ -60,6 +53,21 @@ class MainWindow(QMainWindow):
         # Set the central widget of the Window.
         self.setCentralWidget(self.layout)
         #self.showFullScreen()
+
+    def populate_file(self, file):
+        self.file_menu.addAction(file["mkbkp"])
+        self.file_menu.addAction(file["opbkp"])
+        self.file_menu.addAction(file["opt"])
+        self.file_menu.addAction(file["exit"])
+        
+    def populate_views(self, views):
+        self.views_menu.addAction(views["menu"])
+        self.views_menu.addAction(views["raspored"])
+        self.views_menu.addAction(views["rezervacije"])
+        self.views_menu.addAction(views["racuni"])
+        self.views_menu.addAction(views["radnici"])
+
+        
 
     def switch_view(self, index):
         self.layout.setCurrentIndex(index)
