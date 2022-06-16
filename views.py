@@ -61,6 +61,7 @@ class MainView(QtWidgets.QWidget):
         self.tFrame.layout.setAlignment(Qt.AlignLeft)
 
         for frame in [self.lFrame, self.rFrame, self.tFrame]:
+            frame.setObjectName("frame")
             frame.setFrameShape(QFrame.Box)
             frame.setFrameShadow(QFrame.Sunken)
 
@@ -138,6 +139,7 @@ class ReservationMainView(MainView):
         super().__init__("Rezervacije")
         # override default (horizontal) layout
         self.tFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
+
         # ---------WIDGETS--------------
         self.addButton = QPushButton("+ Reservation")
         self.tlocrt = QLabel("Tlocrt")
@@ -150,6 +152,7 @@ class ReservationMainView(MainView):
                 - Reserved""")
 
         # ---------STYLES---------------
+        self.tFrame.setObjectName("frame")
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
         self.infoLabels.setAlignment(Qt.AlignBottom)
@@ -227,7 +230,7 @@ class MyFrame(QtWidgets.QFrame):
         self.setFrameShape(QFrame.Box)
         self.setFrameShadow(QFrame.Sunken)
         # ---------STYLE----------
-        #self.setStyleSheet(qss)
+        self.setStyleSheet(qss)
 
 class SliderLabel(QtWidgets.QWidget):
     def __init__(self):
