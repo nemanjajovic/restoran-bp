@@ -35,69 +35,81 @@ class TableModel(QAbstractTableModel):
 class MainView(QtWidgets.QWidget):
     def __init__(self, viewName):
         super().__init__()
+        # ----------LAYOUTS----------
         self.layout = QHBoxLayout()
 
         self.llayout = QVBoxLayout()
         self.rlayout = QVBoxLayout()
-        self.rtop    = QHBoxLayout()
-        self.llayout.setContentsMargins(0, 0, 0, 0)
 
-        self.rlayout.addLayout(self.rtop)
         self.layout.addLayout(self.llayout)
         self.layout.addLayout(self.rlayout)
 
         self.setLayout(self.layout)
 
-        self.llayout.setAlignment(Qt.AlignTop)
-        self.rtop.setAlignment(Qt.AlignLeft)
+        # ----------FRAMES-----------
+        self.lFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
+        self.rFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
+        self.tFrame = MyFrame(orientation=QtWidgets.QHBoxLayout)
 
-        # -----
+        # ----------WIDGET-----------
         self.viewLabel = QLabel(viewName)
-        self.viewLabel.setStyleSheet(naslov)
 
-    def fill_llayout(self, widgets):
+        # ----------STYLES-----------
+        self.llayout.setAlignment(Qt.AlignTop)
+        self.llayout.setContentsMargins(0, 0, 0, 0)
+        self.lFrame.layout.setAlignment(Qt.AlignTop)
+        self.tFrame.layout.setAlignment(Qt.AlignLeft)
+
+        for frame in [self.lFrame, self.rFrame, self.tFrame]:
+            frame.setFrameShape(QFrame.Box)
+            frame.setFrameShadow(QFrame.Sunken)
+
+    def fill_llayout(self, *widgets):
         self.llayout.addWidget(self.viewLabel)
+        self.llayout.addWidget(self.lFrame)
+        frame = self.lFrame.layout
         for widget in widgets:
-            self.llayout.addWidget(widget)
+            frame.addWidget(widget)
     
-    def fill_rlayout(self, widgets):
+    def fill_rlayout(self, *widgets):
+        self.rlayout.addWidget(self.rFrame)
+        frame = self.rFrame.layout
         for widget in widgets:
-            self.rlayout.addWidget(widget)
+            frame.addWidget(widget)
+
+    def fill_rtop(self, *widgets):
+        self.rlayout.addWidget(self.tFrame)
+        frame = self.tFrame.layout
+        for widget in widgets:
+            frame.addWidget(widget)
 
 class MenuMainView(MainView):
     def __init__(self):
         super().__init__("Meni")
         columns = ["gasdgsad", "shdah", "ASF"]
         # ---------WIDGETS--------------
-        self.label = QLabel()
         self.search = QLineEdit()
         self.addItem = QPushButton("+ Add Item")
         self.butt1 = QPushButton("PICE")
         self.butt2 = QPushButton("HRANA")
-        frame = ButtonFrame([self.butt1,self.butt2])
 
         self.table = QtWidgets.QTableView()
         self.tableWidget = TableModel(columns)
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        self.label.setStyleSheet(qss1)
         self.search.setStyleSheet(search)
         self.addItem.setStyleSheet(add)
-        self.butt1.setStyleSheet(menu)
-        self.butt2.setStyleSheet(menu)
-        frame.setFixedHeight(60)
 
         self.butt1.setFlat(True)
         self.butt2.setFlat(True)
         
         # --------FILL-LEFT-WIDGETS ----------
-        self.fill_llayout([frame, self.label])
+        self.fill_llayout(self.butt1,self.butt2)
 
         # --------ADD-RIGHT-WIDGETS ----------
-        self.rtop.addWidget(self.search)
-        self.rtop.addWidget(self.addItem)
-        self.rlayout.addWidget(self.table)
+        self.fill_rtop(self.search, self.addItem)
+        self.fill_rlayout(self.table)
 
 class ScheduleMainView(MainView):
     def __init__(self):
@@ -116,14 +128,16 @@ class ScheduleMainView(MainView):
         self.calendar.setStyleSheet(cal)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.fill_llayout([self.calendar, self.weekButton])
+        self.fill_llayout(self.calendar, self.weekButton)
 
         # ----ADD-RIGHT-WIDGETS --------
-        self.rlayout.addWidget(self.table)
+        self.fill_rlayout(self.table)
 
 class ReservationMainView(MainView):
     def __init__(self):
         super().__init__("Rezervacije")
+        # override default (horizontal) layout
+        self.tFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
         # ---------WIDGETS--------------
         self.addButton = QPushButton("+ Reservation")
         self.tlocrt = QLabel("Tlocrt")
@@ -142,20 +156,17 @@ class ReservationMainView(MainView):
         self.slider.setRange(0, 20)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.fill_llayout([self.addButton,self.calendar,self.infoLabels])
+        self.fill_llayout(self.addButton,self.calendar,self.infoLabels)
 
         # ----ADD-RIGHT-WIDGETS --------
-        self.fill_rlayout([
-            sliderLbl,
-            self.slider,
-            self.tlocrt,
-            ])              
+        self.fill_rtop(sliderLbl, self.slider)
+        self.fill_rlayout(self.tlocrt)              
 
 class ReceiptMainView(MainView):
     def __init__(self):
         super().__init__("Racuni")
         columns = ["gasdgsad", "shdah", "ASF"]
-
+        
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
@@ -169,11 +180,11 @@ class ReceiptMainView(MainView):
         self.search.setStyleSheet(search)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.fill_llayout([self.calendar])
+        self.fill_llayout(self.calendar)
 
         # ----ADD-RIGHT-WIDGETS --------
-        self.rtop.addWidget(self.search)
-        self.rlayout.addWidget(self.table)
+        self.fill_rtop(self.search)
+        self.fill_rlayout(self.table)
 
 class WorkersMainView(MainView):
     def __init__(self):
@@ -185,7 +196,6 @@ class WorkersMainView(MainView):
         b2 = QPushButton("Servis")
         b3 = QPushButton("Kuhinja")
         b4 = QPushButton("Pomocni")
-        buttonFrame = ButtonFrame([b1,b2,b3,b4])        
         self.search = QLineEdit()
 
         self.table = QtWidgets.QTableView()
@@ -193,34 +203,31 @@ class WorkersMainView(MainView):
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        self.search.setStyleSheet(search)
+        self.search.setStyleSheet(qss)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.fill_llayout([buttonFrame])
+        self.fill_llayout(b1,b2,b3,b4)
 
         # ----ADD-RIGHT-WIDGETS --------
-        self.rtop.addWidget(self.search)
-        self.rlayout.addWidget(self.table)
+        self.fill_rtop(self.search)
+        self.fill_rlayout(self.table)
 
         b1.clicked.connect(lambda:self.test(b1.text()))
     
     def test(self, name):
         print(name)
 
-class ButtonFrame(QtWidgets.QFrame):
-    def __init__(self, buttons):
+class MyFrame(QtWidgets.QFrame):
+    def __init__(self, *args, **kwargs):
         super().__init__()
-        but = QPushButton("")
-        but.setFlat(True)
-        but.setEnabled(False)
-        vbox = QtWidgets.QVBoxLayout(self)
+        # ---------LAYOUT---------
+        self.layout = kwargs["orientation"](self)
     
-        self.setLayout(vbox)
+        self.setLayout(self.layout)
         self.setFrameShape(QFrame.Box)
         self.setFrameShadow(QFrame.Sunken)
-        self.setFixedWidth(200)
-        for button in buttons:
-            vbox.addWidget(button)
+        # ---------STYLE----------
+        #self.setStyleSheet(qss)
 
 class SliderLabel(QtWidgets.QWidget):
     def __init__(self):
