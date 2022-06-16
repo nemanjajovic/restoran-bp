@@ -44,6 +44,13 @@ qss1 = """
     min-width:300px;
     border :3px solid darkblue;
 """
+qss = """
+        QFrame{border: 2px solid green; border-radius: 4px;}
+        QFrame::Hover{border: 2px solid white;}
+        QLineEdit{border: 2px solid green; border-radius: 4px;}
+        QLineEdit::Hover{border: 2px solid white;}
+        """
+
 search = """
     max-width:300px;
 """
@@ -52,10 +59,9 @@ add = """
 """
 menu = """
     text-align:left;
-    max-height: 20px;
 """
 cal = """
-    max-width:300px;
+    max-width:310px;
     max-height:250px;
 """
 
