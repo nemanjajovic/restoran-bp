@@ -83,6 +83,7 @@ if __name__ == "__main__":
     darkTheme = DarkTheme(app.palette())
 
     window = MainWindow()
+    window.setFixedSize(1600,900)
     window.show()
 
     app.setPalette(darkTheme.pal)
