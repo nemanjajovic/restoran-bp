@@ -78,9 +78,12 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyle("Fusion") 
+
+    darkTheme = DarkTheme(app.palette())
 
     window = MainWindow()
     window.show()
 
-    app.setStyle("Fusion")
+    app.setPalette(darkTheme.pal)
     app.exec()
