@@ -32,11 +32,9 @@ class TableModel(QAbstractTableModel):
             #if orientation == Qt.Vertical:
              #   return str(self._data.index[section])
 
-class MenuMainView(QtWidgets.QWidget):
-    def __init__(self):
+class MainView(QtWidgets.QWidget):
+    def __init__(self, viewName):
         super().__init__()
-        columns = ["gasdgsad", "shdah", "ASF"]
-        # ---------LAYOUTS--------------
         self.layout = QHBoxLayout()
 
         self.llayout = QVBoxLayout()
@@ -45,14 +43,32 @@ class MenuMainView(QtWidgets.QWidget):
         self.llayout.setContentsMargins(0, 0, 0, 0)
 
         self.rlayout.addLayout(self.rtop)
-        self.rtop.setAlignment(Qt.AlignLeft)
         self.layout.addLayout(self.llayout)
         self.layout.addLayout(self.rlayout)
 
         self.setLayout(self.layout)
 
+        self.llayout.setAlignment(Qt.AlignTop)
+        self.rtop.setAlignment(Qt.AlignLeft)
+
+        # -----
+        self.viewLabel = QLabel(viewName)
+        self.viewLabel.setStyleSheet(naslov)
+
+    def fill_llayout(self, widgets):
+        self.llayout.addWidget(self.viewLabel)
+        for widget in widgets:
+            self.llayout.addWidget(widget)
+    
+    def fill_rlayout(self, widgets):
+        for widget in widgets:
+            self.rlayout.addWidget(widget)
+
+class MenuMainView(MainView):
+    def __init__(self):
+        super().__init__("Meni")
+        columns = ["gasdgsad", "shdah", "ASF"]
         # ---------WIDGETS--------------
-        l = QLabel("Meni")
         self.label = QLabel()
         self.search = QLineEdit()
         self.addItem = QPushButton("+ Add Item")
@@ -65,7 +81,6 @@ class MenuMainView(QtWidgets.QWidget):
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        l.setStyleSheet(naslov)
         self.label.setStyleSheet(qss1)
         self.search.setStyleSheet(search)
         self.addItem.setStyleSheet(add)
@@ -76,33 +91,20 @@ class MenuMainView(QtWidgets.QWidget):
         self.butt1.setFlat(True)
         self.butt2.setFlat(True)
         
-        # --------ADD-LEFT-WIDGETS ----------
-        self.llayout.addWidget(l)
-        self.llayout.addWidget(frame)
-        self.llayout.addWidget(self.label)
+        # --------FILL-LEFT-WIDGETS ----------
+        self.fill_llayout([frame, self.label])
 
         # --------ADD-RIGHT-WIDGETS ----------
         self.rtop.addWidget(self.search)
         self.rtop.addWidget(self.addItem)
         self.rlayout.addWidget(self.table)
 
-class ScheduleMainView(QtWidgets.QWidget):
+class ScheduleMainView(MainView):
     def __init__(self):
-        super().__init__()
+        super().__init__("Raspored")
         columns = ["gasdgsad", "shdah", "ASF"]
-        # ---------LAYOUTS--------------
-        self.layout = QHBoxLayout()
-
-        self.llayout = QVBoxLayout()
-        self.rlayout = QVBoxLayout()
-
-        self.layout.addLayout(self.llayout)
-        self.layout.addLayout(self.rlayout)
-
-        self.setLayout(self.layout)
 
         # ---------WIDGETS--------------
-        label = QLabel("Raspored")
         self.calendar = QCalendarWidget()
         self.weekButton = QPushButton("Sedmicni Raspored")
 
@@ -111,83 +113,50 @@ class ScheduleMainView(QtWidgets.QWidget):
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        label.setStyleSheet(naslov)
         self.calendar.setStyleSheet(cal)
-        self.llayout.setAlignment(Qt.AlignTop)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.llayout.addWidget(label)
-        self.llayout.addWidget(self.calendar)
-        self.llayout.addWidget(self.weekButton)
+        self.fill_llayout([self.calendar, self.weekButton])
 
         # ----ADD-RIGHT-WIDGETS --------
         self.rlayout.addWidget(self.table)
 
-class ReservationMainView(QtWidgets.QWidget):
+class ReservationMainView(MainView):
     def __init__(self):
-        super().__init__()
-        # ---------LAYOUTS--------------
-        self.layout = QHBoxLayout()
-        self.llayout = QVBoxLayout()
-        self.rlayout = QVBoxLayout()
-        self.rtop   = QGridLayout()
-
-        self.rlayout.addLayout(self.rtop)
-        self.layout.addLayout(self.llayout)
-        self.layout.addLayout(self.rlayout)
-
-        self.setLayout(self.layout)
-
+        super().__init__("Rezervacije")
         # ---------WIDGETS--------------
-        label = QLabel("Rezervacije")
-        self.add = QPushButton("+ Reservation")
+        self.addButton = QPushButton("+ Reservation")
         self.tlocrt = QLabel("Tlocrt")
         self.calendar = QCalendarWidget()
         sliderLbl = SliderLabel()
         self.slider = QSlider(Qt.Horizontal)
-        self.labels = QLabel("""
+        self.infoLabels = QLabel("""
                 - Free
                 - Taken
                 - Reserved""")
 
         # ---------STYLES---------------
-        label.setStyleSheet(naslov)
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
-        self.labels.setAlignment(Qt.AlignBottom)
-        self.llayout.setAlignment(Qt.AlignTop)
+        self.infoLabels.setAlignment(Qt.AlignBottom)
         self.slider.setRange(0, 20)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.llayout.addWidget(label)
-        self.llayout.addWidget(self.add)
-        self.llayout.addWidget(self.calendar)
-        self.llayout.addWidget(self.labels)
+        self.fill_llayout([self.addButton,self.calendar,self.infoLabels])
 
         # ----ADD-RIGHT-WIDGETS --------
-        self.rlayout.addWidget(sliderLbl)
-        self.rlayout.addWidget(self.slider)
-        self.rlayout.addWidget(self.tlocrt)
+        self.fill_rlayout([
+            sliderLbl,
+            self.slider,
+            self.tlocrt,
+            ])              
 
-class ReceiptMainView(QtWidgets.QWidget):
+class ReceiptMainView(MainView):
     def __init__(self):
-        super().__init__()
+        super().__init__("Racuni")
         columns = ["gasdgsad", "shdah", "ASF"]
-        # ---------LAYOUTS--------------
-        self.layout = QHBoxLayout()
-
-        self.llayout = QVBoxLayout()
-        self.rlayout = QVBoxLayout()
-        self.rtop    = QHBoxLayout()
-
-        self.rlayout.addLayout(self.rtop)
-        self.layout.addLayout(self.llayout)
-        self.layout.addLayout(self.rlayout)
-
-        self.setLayout(self.layout)
 
         # ---------WIDGETS--------------
-        label = QLabel("Racuni")
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
 
@@ -196,40 +165,22 @@ class ReceiptMainView(QtWidgets.QWidget):
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        label.setStyleSheet(naslov)
         self.calendar.setStyleSheet(cal)
         self.search.setStyleSheet(search)
-        self.llayout.setAlignment(Qt.AlignTop)
-        self.rtop.setAlignment(Qt.AlignLeft)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.llayout.addWidget(label)
-        self.llayout.addWidget(self.calendar)
+        self.fill_llayout([self.calendar])
 
         # ----ADD-RIGHT-WIDGETS --------
         self.rtop.addWidget(self.search)
         self.rlayout.addWidget(self.table)
 
-class WorkersMainView(QtWidgets.QWidget):
+class WorkersMainView(MainView):
     def __init__(self):
-        super().__init__()
+        super().__init__("Radnici")
         columns = ["gasdgsad", "shdah", "ASF"]
 
-        # ---------LAYOUTS--------------
-        self.layout = QHBoxLayout()
-
-        self.llayout = QVBoxLayout()
-        self.rlayout = QVBoxLayout()
-        self.rtop    = QHBoxLayout()
-
-        self.rlayout.addLayout(self.rtop)
-        self.layout.addLayout(self.llayout)
-        self.layout.addLayout(self.rlayout)
-
-        self.setLayout(self.layout)
-
         # ---------WIDGETS--------------
-        label = QLabel("Radnici")
         b1 = QPushButton("Svi")
         b2 = QPushButton("Servis")
         b3 = QPushButton("Kuhinja")
@@ -242,15 +193,10 @@ class WorkersMainView(QtWidgets.QWidget):
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        label.setStyleSheet(naslov)
-        buttonFrame.setStyleSheet("border-width:5px")
         self.search.setStyleSheet(search)
-        self.llayout.setAlignment(Qt.AlignTop)
-        self.rtop.setAlignment(Qt.AlignLeft)
 
         # -----ADD-LEFT-WIDGETS --------
-        self.llayout.addWidget(label)
-        self.llayout.addWidget(buttonFrame)
+        self.fill_llayout([buttonFrame])
 
         # ----ADD-RIGHT-WIDGETS --------
         self.rtop.addWidget(self.search)
