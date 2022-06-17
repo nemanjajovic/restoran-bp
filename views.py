@@ -73,10 +73,13 @@ class MyFrame(QtWidgets.QFrame):
         self.setStyleSheet(qss)
 
 class SliderLabel(QtWidgets.QWidget):
+    """ Widget that contains labels for the slider."""
     def __init__(self):
         super().__init__()
-        hbox = QtWidgets.QHBoxLayout(self)
+
+        hbox = QHBoxLayout(self)
         hbox.setAlignment(Qt.AlignJustify)
+
         labels = [QLabel(str(i)) for i in range(1,13)]
         for label in labels:
             label.setFixedWidth(30)
@@ -85,7 +88,9 @@ class SliderLabel(QtWidgets.QWidget):
 class MenuMainView(MainView):
     def __init__(self):
         super().__init__("Meni")
+        # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
+
         # ---------WIDGETS--------------
         self.search = QLineEdit()
         self.addItem = QPushButton("+ Add Item")
@@ -103,16 +108,15 @@ class MenuMainView(MainView):
         self.butt1.setFlat(True)
         self.butt2.setFlat(True)
         
-        # --------FILL-LEFT-WIDGETS ----------
+        # --------FILL-LAYOUTS----------
         self.fill_llayout(self.butt1,self.butt2)
-
-        # --------ADD-RIGHT-WIDGETS ----------
         self.fill_rtop(self.search, self.addItem)
         self.fill_rlayout(self.table)
 
 class ScheduleMainView(MainView):
     def __init__(self):
         super().__init__("Raspored")
+        # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
 
         # ---------WIDGETS--------------
@@ -126,21 +130,19 @@ class ScheduleMainView(MainView):
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
 
-        # -----ADD-LEFT-WIDGETS --------
+        # --------FILL-LAYOUTS----------  
         self.fill_llayout(self.calendar, self.weekButton)
-
-        # ----ADD-RIGHT-WIDGETS --------
         self.fill_rlayout(self.table)
 
 class ReservationMainView(MainView):
     def __init__(self):
         super().__init__("Rezervacije")
-        # override default (horizontal) layout
-        self.tFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
+        # override default (horizontal) MainView layout
+        self.tFrame = MyFrame(QVBoxLayout)
 
         # ---------WIDGETS--------------
         self.addButton = QPushButton("+ Reservation")
-        self.tlocrt = QLabel("Tlocrt")
+        self.tlocrt = QLabel("Tlocrt") # placeholder
         self.calendar = QCalendarWidget()
         sliderLbl = SliderLabel()
         self.slider = QSlider(Qt.Horizontal)
@@ -154,18 +156,17 @@ class ReservationMainView(MainView):
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
         self.infoLabels.setAlignment(Qt.AlignBottom)
-        self.slider.setRange(0, 20)
+        self.slider.setRange(0, 20) # 20 ticks
 
-        # -----ADD-LEFT-WIDGETS --------
+        # --------FILL-LAYOUTS----------
         self.fill_llayout(self.addButton,self.calendar,self.infoLabels)
-
-        # ----ADD-RIGHT-WIDGETS --------
         self.fill_rtop(sliderLbl, self.slider)
         self.fill_rlayout(self.tlocrt)              
 
 class ReceiptMainView(MainView):
     def __init__(self):
         super().__init__("Racuni")
+        # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
         
         # ---------WIDGETS--------------
@@ -180,16 +181,15 @@ class ReceiptMainView(MainView):
         self.calendar.setStyleSheet(cal)
         self.search.setStyleSheet(search)
 
-        # -----ADD-LEFT-WIDGETS --------
+        # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar)
-
-        # ----ADD-RIGHT-WIDGETS --------
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
 
 class WorkersMainView(MainView):
     def __init__(self):
         super().__init__("Radnici")
+        # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
 
         # ---------WIDGETS--------------
@@ -206,15 +206,14 @@ class WorkersMainView(MainView):
         # ---------STYLES---------------
         self.search.setStyleSheet(qss)
 
-        # -----ADD-LEFT-WIDGETS --------
+        # --------FILL-LAYOUTS----------
         self.fill_llayout(b1,b2,b3,b4)
-
-        # ----ADD-RIGHT-WIDGETS --------
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
 
         b1.clicked.connect(lambda:self.test(b1.text()))
     
     def test(self, name):
+        # test prints 'Svi'
         print(name)
 
