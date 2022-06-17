@@ -1,13 +1,16 @@
-
 from styles import *
 from table import TableModel
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 
-
 class MainView(QtWidgets.QWidget):
+    """ Main layout template for all seperate views."""
+
     def __init__(self, viewName):
         super().__init__()
+        #   Takes one argument, which represents the
+        #   name of the child view.
+
         # ----------LAYOUTS----------
         self.layout = QHBoxLayout()  # parent
         self.llayout = QVBoxLayout() # left
@@ -24,7 +27,7 @@ class MainView(QtWidgets.QWidget):
         self.tFrame = MyFrame(QHBoxLayout) # top (right)
 
         # ----------WIDGET-----------
-        self.viewLabel = QLabel(viewName)
+        self.nameLabel = QLabel(viewName)
 
         # ----------STYLES-----------
         self.llayout.setAlignment(Qt.AlignTop)
@@ -32,29 +35,27 @@ class MainView(QtWidgets.QWidget):
         self.lFrame.layout.setAlignment(Qt.AlignTop)
         self.tFrame.layout.setAlignment(Qt.AlignLeft)
 
+        # make all frames share the same properties
         for frame in [self.lFrame, self.rFrame, self.tFrame]:
             frame.setObjectName("frame")
             frame.setFrameShape(QFrame.Box)
             frame.setFrameShadow(QFrame.Sunken)
 
     def fill_llayout(self, *widgets):
-        self.llayout.addWidget(self.viewLabel)
-        self.llayout.addWidget(self.lFrame)
-        frame = self.lFrame.layout
-        for widget in widgets:
-            frame.addWidget(widget)
+        # view name in top left, out of lFrame
+        self.llayout.addWidget(self.nameLabel)
+        self.fill(self.lFrame, self.llayout, widgets)
     
     def fill_rlayout(self, *widgets):
-        self.rlayout.addWidget(self.rFrame)
-        frame = self.rFrame.layout
-        for widget in widgets:
-            frame.addWidget(widget)
+        self.fill(self.rFrame, self.rlayout, widgets)
 
     def fill_rtop(self, *widgets):
-        self.rlayout.addWidget(self.tFrame)
-        frame = self.tFrame.layout
+        self.fill(self.tFrame, self.rlayout, widgets)
+
+    def fill(self, frame, layout, widgets):
+        layout.addWidget(frame)
         for widget in widgets:
-            frame.addWidget(widget)
+            frame.layout.addWidget(widget)
 
 class MyFrame(QtWidgets.QFrame):
     """ Class that wraps a QFrame around a QBoxlayout 
