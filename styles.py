@@ -45,8 +45,10 @@ qss1 = """
     border :3px solid darkblue;
 """
 qss = """
-        QFrame#frame{border: 2px solid green; border-radius: 4px;}
-        QFrame#frame::Hover{border: 2px solid white;}
+        QFrame#frame0, QFrame#frame1, QFrame#frame2{border: 2px solid green; border-radius: 4px;}
+        QFrame#frame0::hover, QFrame#frame1::hover, QFrame#frame2::hover{border: 2px solid white;}
+        QFrame#frame0{min-width:310px; max-width:315px;min-height:704px;}
+        QFrame#frame2{max-height:100px;}
         QLineEdit{border: 2px solid green; border-radius: 4px;}
         QLineEdit::Hover{border: 2px solid white;}
         """

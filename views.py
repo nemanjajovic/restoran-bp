@@ -34,10 +34,11 @@ class MainView(QtWidgets.QWidget):
         self.llayout.setContentsMargins(0, 0, 0, 0)
         self.lFrame.layout.setAlignment(Qt.AlignTop)
         self.tFrame.layout.setAlignment(Qt.AlignLeft)
+        self.nameLabel.setStyleSheet("QLabel{color:white;min-height:47px;padding-left:5px;font-size:20pt;text-decoration:underline;}")
 
         # make all frames share the same properties
-        for frame in [self.lFrame, self.rFrame, self.tFrame]:
-            frame.setObjectName("frame")
+        for i, frame in enumerate([self.lFrame, self.rFrame, self.tFrame]):
+            frame.setObjectName(f"frame{i}")
             frame.setFrameShape(QFrame.Box)
             frame.setFrameShadow(QFrame.Sunken)
 
@@ -104,9 +105,6 @@ class MenuMainView(MainView):
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
         self.addItem.setStyleSheet(add)
-
-        self.butt1.setFlat(True)
-        self.butt2.setFlat(True)
         
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.butt1,self.butt2)
@@ -139,6 +137,7 @@ class ReservationMainView(MainView):
         super().__init__("Rezervacije")
         # override default (horizontal) MainView layout
         self.tFrame = MyFrame(QVBoxLayout)
+        self.tFrame.setObjectName("frame2")
 
         # ---------WIDGETS--------------
         self.addButton = QPushButton("+ Reservation")
@@ -152,7 +151,6 @@ class ReservationMainView(MainView):
                 - Reserved""")
 
         # ---------STYLES---------------
-        self.tFrame.setObjectName("frame")
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
         self.infoLabels.setAlignment(Qt.AlignBottom)
@@ -204,7 +202,7 @@ class WorkersMainView(MainView):
         self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
-        self.search.setStyleSheet(qss)
+        self.search.setStyleSheet(search)
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(b1,b2,b3,b4)
