@@ -36,10 +36,9 @@ class MainView(QtWidgets.QWidget):
     def __init__(self, viewName):
         super().__init__()
         # ----------LAYOUTS----------
-        self.layout = QHBoxLayout()
-
-        self.llayout = QVBoxLayout()
-        self.rlayout = QVBoxLayout()
+        self.layout = QHBoxLayout()  # parent
+        self.llayout = QVBoxLayout() # left
+        self.rlayout = QVBoxLayout() # right
 
         self.layout.addLayout(self.llayout)
         self.layout.addLayout(self.rlayout)
@@ -47,9 +46,9 @@ class MainView(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
         # ----------FRAMES-----------
-        self.lFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
-        self.rFrame = MyFrame(orientation=QtWidgets.QVBoxLayout)
-        self.tFrame = MyFrame(orientation=QtWidgets.QHBoxLayout)
+        self.lFrame = MyFrame(QVBoxLayout) # left
+        self.rFrame = MyFrame(QVBoxLayout) # right
+        self.tFrame = MyFrame(QHBoxLayout) # top (right)
 
         # ----------WIDGET-----------
         self.viewLabel = QLabel(viewName)
@@ -83,6 +82,31 @@ class MainView(QtWidgets.QWidget):
         frame = self.tFrame.layout
         for widget in widgets:
             frame.addWidget(widget)
+
+class MyFrame(QtWidgets.QFrame):
+    """ Class that wraps a QFrame around a QBoxlayout 
+        to make it easier to style. """
+
+    def __init__(self, orientation):
+        super().__init__()
+        # ---------LAYOUT---------
+        self.layout = orientation(self)
+        self.setLayout(self.layout)
+        
+        # ---------STYLE----------
+        self.setFrameShape(QFrame.Box)
+        self.setFrameShadow(QFrame.Sunken)
+        self.setStyleSheet(qss)
+
+class SliderLabel(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        hbox = QtWidgets.QHBoxLayout(self)
+        hbox.setAlignment(Qt.AlignJustify)
+        labels = [QLabel(str(i)) for i in range(1,13)]
+        for label in labels:
+            label.setFixedWidth(30)
+            hbox.addWidget(label)
 
 class MenuMainView(MainView):
     def __init__(self):
@@ -220,24 +244,3 @@ class WorkersMainView(MainView):
     def test(self, name):
         print(name)
 
-class MyFrame(QtWidgets.QFrame):
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        # ---------LAYOUT---------
-        self.layout = kwargs["orientation"](self)
-    
-        self.setLayout(self.layout)
-        self.setFrameShape(QFrame.Box)
-        self.setFrameShadow(QFrame.Sunken)
-        # ---------STYLE----------
-        self.setStyleSheet(qss)
-
-class SliderLabel(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        hbox = QtWidgets.QHBoxLayout(self)
-        hbox.setAlignment(Qt.AlignJustify)
-        labels = [QLabel(str(i)) for i in range(1,13)]
-        for label in labels:
-            label.setFixedWidth(30)
-            hbox.addWidget(label)
