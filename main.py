@@ -8,18 +8,26 @@ from views import *
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__() 
-        self.setWindowTitle("My App")
-
+        # ----------LAYOUT-----------
         self.layout = QStackedWidget()
 
+        # add widgets on the stack
         self.layout.addWidget(MenuMainView())
         self.layout.addWidget(ScheduleMainView())
         self.layout.addWidget(ReservationMainView())
         self.layout.addWidget(ReceiptMainView())
         self.layout.addWidget(WorkersMainView())
 
+        # ----------STYLE-----------
+        self.setWindowTitle("My App")
         self.layout.setCurrentIndex(0)
         
+        file = {
+            "mkbkp": QAction("Make Backup",self),
+            "opbkp": QAction("Open Backup",self),
+            "opt":   QAction("Settings",self),
+            "exit":   QAction("Exit",self),
+        }
         views = {
             "menu": QAction("Meni",self),
             "raspored": QAction("Raspored",self),
@@ -27,12 +35,7 @@ class MainWindow(QMainWindow):
             "racuni": QAction("Racuni",self),
             "radnici": QAction("Radnici",self),
         }
-        file = {
-            "mkbkp": QAction("Make Backup",self),
-            "opbkp": QAction("Open Backup",self),
-            "opt":   QAction("Settings",self),
-            "exit":   QAction("Exit",self),
-        }
+        
         # ----------------MENU-------------------
         menu = self.menuBar()
 
@@ -41,7 +44,7 @@ class MainWindow(QMainWindow):
         self.views_menu = menu.addMenu("View")
         self.about_menu = menu.addMenu("About")
 
-        # ----------ADD-MENU-ACTIONS-------------
+        # ----------POPULATE-MENUS---------------
         self.populate_file(file)
         self.populate_views(views)
 
