@@ -34,8 +34,8 @@ class MainView(QtWidgets.QWidget):
         self.llayout.setContentsMargins(0, 0, 0, 0)
         self.lFrame.layout.setAlignment(Qt.AlignTop)
         self.tFrame.layout.setAlignment(Qt.AlignLeft)
-        self.nameLabel.setStyleSheet("QLabel{color:white;min-height:47px;padding-left:5px;font-size:20pt;text-decoration:underline;}")
-
+        self.nameLabel.setStyleSheet("QLabel{max-height:47px;padding-left:5px;font-size:20pt;}")
+        
         # make all frames share the same properties
         for i, frame in enumerate([self.lFrame, self.rFrame, self.tFrame]):
             frame.setObjectName(f"frame{i}")
@@ -44,7 +44,9 @@ class MainView(QtWidgets.QWidget):
 
     def fill_llayout(self, *widgets):
         # view name in top left, out of lFrame
-        self.llayout.addWidget(self.nameLabel)
+        #self.llayout.addWidget(self.nameLabel)
+        widgets = list(widgets)
+        widgets.insert(0,self.nameLabel)
         self.fill(self.lFrame, self.llayout, widgets)
     
     def fill_rlayout(self, *widgets):
@@ -69,6 +71,7 @@ class MyFrame(QtWidgets.QFrame):
         self.setLayout(self.layout)
         
         # ---------STYLE----------
+        darkTheme = DarkTheme(self.palette())
         self.setFrameShape(QFrame.Box)
         self.setFrameShadow(QFrame.Sunken)
         self.setStyleSheet(qss)
@@ -157,7 +160,7 @@ class ReservationMainView(MainView):
         self.slider.setRange(0, 20) # 20 ticks
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.addButton,self.calendar,self.infoLabels)
+        self.fill_llayout(self.calendar,self.addButton,self.infoLabels)
         self.fill_rtop(sliderLbl, self.slider)
         self.fill_rlayout(self.tlocrt)              
 

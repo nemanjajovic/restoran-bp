@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
         super().__init__() 
         # ----------LAYOUT-----------
         self.layout = QStackedWidget()
-
+        
         # add widgets on the stack
         self.layout.addWidget(MenuMainView())
         self.layout.addWidget(ScheduleMainView())
@@ -22,6 +22,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("My App")
         self.layout.setCurrentIndex(0)
         
+        # ----------------MENU-------------------
+        menu = self.menuBar()
+        
+        # -----------MENU-ACTIONS----------------
         file = {
             "mkbkp": QAction("Make Backup",self),
             "opbkp": QAction("Open Backup",self),
@@ -35,9 +39,6 @@ class MainWindow(QMainWindow):
             "racuni": QAction("Racuni",self),
             "radnici": QAction("Radnici",self),
         }
-        
-        # ----------------MENU-------------------
-        menu = self.menuBar()
 
         # ----------ADD-MENU-ITEMS---------------
         self.file_menu = menu.addMenu("File")
