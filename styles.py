@@ -450,14 +450,6 @@ QHeaderView::up-arrow {
   width: 14px;
 }
 
-QHeaderView::down-arrow {
-  image: url(skin:controls/arrow_down.svg);
-}
-
-QHeaderView::up-arrow {
-  image: url(skin:controls/arrow_up.svg);
-}
-
 QTabWidget::pane {
   background-color: #2d2d2d;
   border: 1px solid #1c1c1c;
@@ -663,18 +655,6 @@ QDateTimeEdit::drop-down {
   margin-top: 5px;
 }
 
-QComboBox::down-arrow,
-QDateTimeEdit::down-arrow {
-  margin-top: -2px;
-  image: url(skin:controls/arrow_down.svg);
-  width: 14px;
-}
-
-QComboBox::down-arrow:disabled,
-QDateTimeEdit::down-arrow:disabled {
-  image: url(skin:controls/arrow_down_disabled.svg);
-}
-
 QToolButton[popupMode="1"],
 QToolButton[popupMode="2"],
 QPushButton[popupMode="1"],
@@ -686,7 +666,6 @@ QToolButton::menu-arrow,
 QToolButton::menu-indicator,
 QPushButton::menu-arrow,
 QPushButton::menu-indicator {
-  image: url(skin:controls/arrow_down.svg);
   subcontrol-origin: padding;
   subcontrol-position: center right;
   top: 2px;
@@ -697,27 +676,8 @@ QPushButton::menu-indicator {
 QSpinBox::down-button,
 QAbstractSpinBox::down-button {
   padding-right: 4px;
-  image: url(skin:controls/arrow_down.svg);
   width: 14px;
   padding-bottom: 1px;
-}
-
-QSpinBox::down-button:disabled,
-QAbstractSpinBox::down-button:disabled {
-  image: url(skin:controls/arrow_down_disabled.svg);
-}
-
-QSpinBox::up-button,
-QAbstractSpinBox::up-button {
-  padding-right: 4px;
-  image: url(skin:controls/arrow_up.svg);
-  width: 14px;
-  padding-top: 1px;
-}
-
-QSpinBox::up-button:disabled,
-QAbstractSpinBox::up-button:disabled {
-  image: url(skin:controls/arrow_up_disabled.svg);
 }
 
 QComboBox QAbstractItemView {
