@@ -1,3 +1,4 @@
+from Qt.QtGui import QMainWindow
 from styles import *
 from table import TableModel
 from PySide6.QtWidgets import *
@@ -105,6 +106,7 @@ class MenuMainView(MainView):
         self.addItem = QPushButton("+ Add Item")
         self.butt1 = QPushButton("PICE")
         self.butt2 = QPushButton("HRANA")
+        self.form = MenuForm()
 
         self.table = QtWidgets.QTableView()
         self.tableWidget = TableModel(columns)
@@ -120,6 +122,14 @@ class MenuMainView(MainView):
         self.fill_rlayout(self.table)
 
         self.butt1.clicked.connect(self.button_click)
+
+        self.addItem.clicked.connect(self.form.show)
+
+class MenuForm(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setWindowTitle("Menu Forma")
 
 class ScheduleMainView(MainView):
     def __init__(self):
