@@ -11,10 +11,13 @@ class DbHandler:
         self.cursor = self.conn.cursor()
 
     def select(self, columns, table, condition):
-        extend = f"WHERE {condition}" if condition else ""
-        rows = self.cursor.execute(f"""SELECT {columns} FROM {table} {extend};""")
-        for row in rows:
-            print("ID=%d, Name=%s Position=%s" % (row[0], row[1], row[2]))
+        cond = f"WHERE {condition}" if condition else ""
+        command = f"""SELECT {columns} FROM {table} {cond};"""
+        return self.cursor.execute(command)
+
+    def insert(self, table, columns, values):
+        command = f"INSERT INTO {table} ({columns}) VALUES ({values})"
+        return self.cursor.execute(command)
 
 # context manager
 class Connection:
@@ -27,8 +30,11 @@ class Connection:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.handler:
+            self.handler.conn.commit()
             self.handler.conn.close()
 
 # context manager test
 with Connection() as handler:
-    handler.select("*", "Radnici","")
+    handler.insert("Radnici", "radnik_naziv, radnik_tip", "'DUDU DADA', 'servis'")
+    for row in handler.select("*", "Radnici",""):
+        print(row)
