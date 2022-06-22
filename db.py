@@ -1,5 +1,18 @@
 import pyodbc
 
+class Connection:
+    def __init__(self):
+        pass
+
+    def __enter__(self):
+        self.handler = DbHandler()
+        return self.handler
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.handler:
+            self.handler.conn.commit()
+            self.handler.conn.close()
+
 class DbHandler:
     def __init__(self):
         self.conn = pyodbc.connect(
@@ -22,20 +35,6 @@ class DbHandler:
     def update(self, table, column, new_val, id_column, id_val):
         command = f"UPDATE {table} SET {column} = '{new_val}' WHERE {id_column} = {id_val}"
         return self.cursor.execute(command)
-
-# context manager
-class Connection:
-    def __init__(self):
-        pass
-
-    def __enter__(self):
-        self.handler = DbHandler()
-        return self.handler
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.handler:
-            self.handler.conn.commit()
-            self.handler.conn.close()
 
 # context manager test
 with Connection() as handler:
