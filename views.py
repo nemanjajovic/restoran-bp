@@ -2,6 +2,7 @@ from styles import *
 from table import TableModel
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
+from db import Connection
 
 class MainView(QtWidgets.QWidget):
     """ Main layout template for all seperate views."""
@@ -10,6 +11,7 @@ class MainView(QtWidgets.QWidget):
         super().__init__()
         #   Takes one argument, which represents the
         #   name of the child view.
+        self.textBox = QTextEdit()
 
         # ----------LAYOUTS----------
         self.layout = QHBoxLayout()  # parent
@@ -59,6 +61,9 @@ class MainView(QtWidgets.QWidget):
         layout.addWidget(frame)
         for widget in widgets:
             frame.layout.addWidget(widget)
+
+    def button_click(self):
+        self.textBox.append(self.sender().text())
 
 class MyFrame(QtWidgets.QFrame):
     """ Class that wraps a QFrame around a QBoxlayout 
@@ -110,9 +115,11 @@ class MenuMainView(MainView):
         self.addItem.setStyleSheet(add)
         
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.butt1,self.butt2)
+        self.fill_llayout(self.butt1, self.butt2, self.textBox)
         self.fill_rtop(self.search, self.addItem)
         self.fill_rlayout(self.table)
+
+        self.butt1.clicked.connect(self.button_click)
 
 class ScheduleMainView(MainView):
     def __init__(self):
@@ -132,7 +139,7 @@ class ScheduleMainView(MainView):
         self.calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
-        self.fill_llayout(self.calendar, self.weekButton)
+        self.fill_llayout(self.calendar, self.weekButton, self.textBox)
         self.fill_rlayout(self.table)
 
 class ReservationMainView(MainView):
@@ -160,7 +167,7 @@ class ReservationMainView(MainView):
         self.slider.setRange(0, 20) # 20 ticks
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.calendar,self.addButton,self.infoLabels)
+        self.fill_llayout(self.calendar,self.addButton,self.infoLabels, self.textBox)
         self.fill_rtop(sliderLbl, self.slider)
         self.fill_rlayout(self.tlocrt)              
 
@@ -183,7 +190,7 @@ class ReceiptMainView(MainView):
         self.search.setStyleSheet(search)
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.calendar)
+        self.fill_llayout(self.calendar, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
 
@@ -208,7 +215,7 @@ class WorkersMainView(MainView):
         self.search.setStyleSheet(search)
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(b1,b2,b3,b4)
+        self.fill_llayout(b1,b2,b3,b4, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
 
