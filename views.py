@@ -1,9 +1,9 @@
-from Qt.QtGui import QMainWindow
 from styles import *
 from table import TableModel
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
-from db import Connection
+#from db import Connection
+from forms import *
 
 class MainView(QtWidgets.QWidget):
     """ Main layout template for all seperate views."""
@@ -100,13 +100,14 @@ class MenuMainView(MainView):
         super().__init__("Meni")
         # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
+        #---------FORM-WINDOW-----------
+        self.form = MenuForm()
 
         # ---------WIDGETS--------------
         self.search = QLineEdit()
         self.addItem = QPushButton("+ Add Item")
         self.butt1 = QPushButton("PICE")
         self.butt2 = QPushButton("HRANA")
-        self.form = MenuForm()
 
         self.table = QtWidgets.QTableView()
         self.tableWidget = TableModel(columns)
@@ -122,24 +123,20 @@ class MenuMainView(MainView):
         self.fill_rlayout(self.table)
 
         self.butt1.clicked.connect(self.button_click)
-
+        
         self.addItem.clicked.connect(self.form.show)
-
-class MenuForm(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.setWindowTitle("Menu Forma")
 
 class ScheduleMainView(MainView):
     def __init__(self):
         super().__init__("Raspored")
         # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
+        self.addForm = ScheduleAddForm()
 
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
-        self.weekButton = QPushButton("Sedmicni Raspored")
+        self.addButton = QPushButton("Edit Raspored")
+        self.weekButton = QPushButton("Pregled Sedmice")
 
         self.table = QtWidgets.QTableView()
         self.tableWidget = TableModel(columns)
@@ -149,8 +146,10 @@ class ScheduleMainView(MainView):
         self.calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
-        self.fill_llayout(self.calendar, self.weekButton, self.textBox)
+        self.fill_llayout(self.calendar, self.addButton, self.weekButton, self.textBox)
         self.fill_rlayout(self.table)
+
+        self.addButton.clicked.connect(self.addForm.show)
 
 class ReservationMainView(MainView):
     def __init__(self):
@@ -158,6 +157,7 @@ class ReservationMainView(MainView):
         # override default (horizontal) MainView layout
         self.tFrame = MyFrame(QVBoxLayout)
         self.tFrame.setObjectName("frame2")
+        self.addForm = ReservationAddForm()
 
         # ---------WIDGETS--------------
         self.addButton = QPushButton("+ Reservation")
@@ -179,7 +179,9 @@ class ReservationMainView(MainView):
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar,self.addButton,self.infoLabels, self.textBox)
         self.fill_rtop(sliderLbl, self.slider)
-        self.fill_rlayout(self.tlocrt)              
+        self.fill_rlayout(self.tlocrt)     
+
+        self.addButton.clicked.connect(self.addForm.show)
 
 class ReceiptMainView(MainView):
     def __init__(self):
@@ -190,6 +192,7 @@ class ReceiptMainView(MainView):
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
+        self.button = QPushButton("Simuliraj Narudzbe")
 
         self.table = QtWidgets.QTableView()
         self.tableWidget = TableModel(columns)
@@ -200,7 +203,7 @@ class ReceiptMainView(MainView):
         self.search.setStyleSheet(search)
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.calendar, self.textBox)
+        self.fill_llayout(self.calendar, self.button, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
 
