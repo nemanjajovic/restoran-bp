@@ -36,10 +36,6 @@ class DbHandler:
         command = f"UPDATE {table} SET {column} = '{new_val}' WHERE {id_column} = {id_val}"
         return self.cursor.execute(command)
 
-# context manager test
-with Connection() as handler:
-    table = "Radnici"
-    #handler.insert("Radnici", "radnik_naziv, radnik_tip", "'DUDU DADA', 'servis'")
-    handler.update(table, "radnik_naziv", 'Hahuu g', "radnik_id", "7")
-    for row in handler.select("*", table,""):
-        print(row)
+    def delete(self, table, condition):
+        command = f"DELETE FROM {table} WHERE {condition}"
+        return self.cursor.execute(command)
