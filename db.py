@@ -19,6 +19,10 @@ class DbHandler:
         command = f"INSERT INTO {table} ({columns}) VALUES ({values})"
         return self.cursor.execute(command)
 
+    def update(self, table, column, new_val, id_column, id_val):
+        command = f"UPDATE {table} SET {column} = '{new_val}' WHERE {id_column} = {id_val}"
+        return self.cursor.execute(command)
+
 # context manager
 class Connection:
     def __init__(self):
@@ -35,6 +39,8 @@ class Connection:
 
 # context manager test
 with Connection() as handler:
-    handler.insert("Radnici", "radnik_naziv, radnik_tip", "'DUDU DADA', 'servis'")
-    for row in handler.select("*", "Radnici",""):
+    table = "Radnici"
+    #handler.insert("Radnici", "radnik_naziv, radnik_tip", "'DUDU DADA', 'servis'")
+    handler.update(table, "radnik_naziv", 'Hahuu g', "radnik_id", "7")
+    for row in handler.select("*", table,""):
         print(row)
