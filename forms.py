@@ -18,6 +18,10 @@ class MainForm(QMainWindow):
 
         self.setCentralWidget(centralWidget)
 
+    def insert(self, table, columns, values):
+        with Connection() as handler:
+            handler.insert(table, columns, values)
+
 class MenuForm(MainForm):
     def __init__(self):
         super().__init__()
