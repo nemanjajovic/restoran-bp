@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
-from db import Connection
+#from db import Connection
 
 class MainForm(QMainWindow):
     def __init__(self):

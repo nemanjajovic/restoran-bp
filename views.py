@@ -2,7 +2,9 @@ from styles import *
 from table import TableModel
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
-from db import Connection
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QPixmap, QIcon
+#from db import Connection
 from forms import *
 
 class MainView(QtWidgets.QWidget):
@@ -109,13 +111,13 @@ class MenuMainView(MainView):
         self.butt2 = QPushButton("HRANA")
         column_list = []
 
-        with Connection() as handler:
-            columns = handler.get_column_names("Narudzbe")
-            for column in columns:
-                column_list.append(column[3])
-            self.table = QtWidgets.QTableView()
-            self.tableWidget = TableModel(column_list)
-            self.table.setModel(self.tableWidget)
+        # with Connection() as handler:
+        #     columns = handler.get_column_names("Narudzbe")
+        #     for column in columns:
+        #         column_list.append(column[3])
+        self.table = QtWidgets.QTableView()
+        self.tableWidget = TableModel(column_list)
+        self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
@@ -163,16 +165,28 @@ class ReservationMainView(MainView):
         self.tFrame.setObjectName("frame2")
         self.addForm = ReservationAddForm()
 
+        self.rFrame = MyFrame(QGridLayout)
+
         # ---------WIDGETS--------------
+        self.icon= QIcon("assets/freeTable.png")
+        self.buttons = []
+        for i in range(30):
+            self.buttons.append(QPushButton())
+            self.buttons[i].setIcon(self.icon)
+            self.buttons[i].setFixedSize(QSize(140,130))
+            self.buttons[i].setIconSize(QSize(140,130))
+            
+        self.buttons[0].clicked.connect(lambda:self.test(0))
+
         self.addButton = QPushButton("+ Reservation")
         self.tlocrt = QLabel("Tlocrt") # placeholder
         self.calendar = QCalendarWidget()
         sliderLbl = SliderLabel()
         self.slider = QSlider(Qt.Horizontal)
         self.infoLabels = QLabel("""
-                - Free
-                - Taken
-                - Reserved""")
+                - Slobodno
+                - Zauzeto
+                - Rezervisano""")
 
         # ---------STYLES---------------
         self.tlocrt.setStyleSheet(tlo)
@@ -183,16 +197,28 @@ class ReservationMainView(MainView):
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar,self.addButton,self.infoLabels, self.textBox)
         self.fill_rtop(sliderLbl, self.slider)
-        self.fill_rlayout(self.tlocrt)     
-
+        #self.fill_rlayout(self.tlocrt)     
+        self.fill_grid()
         self.addButton.clicked.connect(self.addForm.show)
+
+    def test(self, n):
+        print(n)
+
+    def fill_grid(self):
+        self.rlayout.addWidget(self.rFrame)
+        x = 0
+        for i in range(6):
+            for j in range(5):
+                self.rFrame.layout.addWidget(self.buttons[x],i,j)
+                x += 1
+
 
 class ReceiptMainView(MainView):
     def __init__(self):
         super().__init__("Racuni")
         # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
-        
+    
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
@@ -205,12 +231,17 @@ class ReceiptMainView(MainView):
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
         self.search.setStyleSheet(search)
+        # self.rlayout.setObjectName(f"frame{i}")
+        # self.rlayout.setFrameShape(QFrame.Box)
+        # self.rlayout.setFrameShadow(QFrame.Sunken)
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar, self.button, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
+        
 
+    
 class WorkersMainView(MainView):
     def __init__(self):
         super().__init__("Radnici")
