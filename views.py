@@ -2,7 +2,7 @@ from styles import *
 from table import TableModel
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
-#from db import Connection
+from db import Connection
 from forms import *
 
 class MainView(QtWidgets.QWidget):
@@ -99,7 +99,6 @@ class MenuMainView(MainView):
     def __init__(self):
         super().__init__("Meni")
         # this is just a placeholder
-        columns = ["gasdgsad", "shdah", "ASF"]
         #---------FORM-WINDOW-----------
         self.form = MenuForm()
 
@@ -108,10 +107,15 @@ class MenuMainView(MainView):
         self.addItem = QPushButton("+ Add Item")
         self.butt1 = QPushButton("PICE")
         self.butt2 = QPushButton("HRANA")
+        column_list = []
 
-        self.table = QtWidgets.QTableView()
-        self.tableWidget = TableModel(columns)
-        self.table.setModel(self.tableWidget)
+        with Connection() as handler:
+            columns = handler.get_column_names("Narudzbe")
+            for column in columns:
+                column_list.append(column[3])
+            self.table = QtWidgets.QTableView()
+            self.tableWidget = TableModel(column_list)
+            self.table.setModel(self.tableWidget)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
