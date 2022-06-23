@@ -39,3 +39,7 @@ class DbHandler:
     def delete(self, table, condition):
         command = f"DELETE FROM {table} WHERE {condition}"
         return self.cursor.execute(command)
+
+    def get_column_names(self, table):
+        command = f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{table}'"
+        return self.cursor.execute(command)
