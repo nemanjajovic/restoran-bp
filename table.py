@@ -28,3 +28,29 @@ class TableModel(QAbstractTableModel):
 
             #if orientation == Qt.Vertical:
              #   return str(self._data.index[section])
+
+class IconLabel(QWidget):
+
+    IconSize = QSize(24, 24)
+    HorizontalSpacing = 2
+
+    def __init__(self, icon_path, text, final_stretch=True):
+        super().__init__()
+
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+
+        icon = QLabel()
+        icon.setPixmap(QIcon(icon_path).pixmap(self.IconSize))
+
+        layout.addWidget(QLabel("                                      "))      
+        layout.addWidget(icon)
+        #layout.addSpacing(self.HorizontalSpacing)
+        layout.addWidget(QLabel(text))
+        #layout.setAlignment(Qt.AlignRight)
+        #icon.setStyleSheet("QLabel{max-width:16px'}")
+
+        if final_stretch:
+            layout.addStretch()
+
