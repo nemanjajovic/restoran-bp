@@ -1,5 +1,7 @@
 import pandas as pd
+from PySide6.QtWidgets import *
 from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
+from PySide6.QtGui import QPixmap, QIcon
 
 class TableModel(QAbstractTableModel):
     def __init__(self, col=[], rows=[]):
@@ -25,31 +27,26 @@ class TableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
                 return str(self._data.columns[section])
-
-            #if orientation == Qt.Vertical:
-             #   return str(self._data.index[section])
+            if orientation == Qt.Vertical:
+                return str(self._data.index[section])
 
 class IconLabel(QWidget):
-
-    IconSize = QSize(24, 24)
-    HorizontalSpacing = 2
-
+    """A class combining an icon and text."""
     def __init__(self, icon_path, text, final_stretch=True):
         super().__init__()
+        IconSize = QSize(24, 24)
+        HorizontalSpacing = 2
 
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
 
         icon = QLabel()
-        icon.setPixmap(QIcon(icon_path).pixmap(self.IconSize))
+        icon.setPixmap(QIcon(icon_path).pixmap(IconSize))
 
         layout.addWidget(QLabel("                                      "))      
         layout.addWidget(icon)
-        #layout.addSpacing(self.HorizontalSpacing)
         layout.addWidget(QLabel(text))
-        #layout.setAlignment(Qt.AlignRight)
-        #icon.setStyleSheet("QLabel{max-width:16px'}")
 
         if final_stretch:
             layout.addStretch()

@@ -1,5 +1,5 @@
 from styles import *
-from table import TableModel
+from helper_widgets import TableModel, IconLabel
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
