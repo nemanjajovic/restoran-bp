@@ -8,12 +8,12 @@ from PySide6.QtGui import QPixmap, QIcon
 from forms import *
 
 class MainView(QtWidgets.QWidget):
-    """ Main layout template for all seperate views."""
-
+    """ A layout parent class for all views, takes one string
+        argument which represents the name of the view."""
     def __init__(self, viewName):
         super().__init__()
-        #   Takes one argument, which represents the
-        #   name of the child view.
+        # ----------WIDGETS----------
+        self.nameLabel = QLabel(viewName)
         self.textBox = QTextEdit()
 
         # ----------LAYOUTS----------
@@ -31,9 +31,6 @@ class MainView(QtWidgets.QWidget):
         self.rFrame = MyFrame(QVBoxLayout) # right
         self.tFrame = MyFrame(QHBoxLayout) # top (right)
 
-        # ----------WIDGET-----------
-        self.nameLabel = QLabel(viewName)
-
         # ----------STYLES-----------
         self.llayout.setAlignment(Qt.AlignTop)
         self.llayout.setContentsMargins(0, 0, 0, 0)
@@ -48,10 +45,8 @@ class MainView(QtWidgets.QWidget):
             frame.setFrameShadow(QFrame.Sunken)
 
     def fill_llayout(self, *widgets):
-        # view name in top left, out of lFrame
-        #self.llayout.addWidget(self.nameLabel)
         widgets = list(widgets)
-        widgets.insert(0,self.nameLabel)
+        widgets.insert(0,self.nameLabel) # make first widget
         self.fill(self.lFrame, self.llayout, widgets)
     
     def fill_rlayout(self, *widgets):
@@ -69,17 +64,16 @@ class MainView(QtWidgets.QWidget):
         self.textBox.append(self.sender().text())
 
 class MyFrame(QtWidgets.QFrame):
-    """ Class that wraps a QFrame around a QBoxlayout 
-        to make it easier to style. """
-
-    def __init__(self, orientation):
+    """ A class that wraps a QFrame around a QBoxLayout 
+        to make it easier to style, takes one QBoxLayout
+        as an argument."""
+    def __init__(self, layout):
         super().__init__()
         # ---------LAYOUT---------
-        self.layout = orientation(self)
+        self.layout = layout(self)
         self.setLayout(self.layout)
         
         # ---------STYLE----------
-        darkTheme = DarkTheme(self.palette())
         self.setFrameShape(QFrame.Box)
         self.setFrameShadow(QFrame.Sunken)
         self.setStyleSheet(qss)
@@ -100,7 +94,6 @@ class SliderLabel(QtWidgets.QWidget):
 class MenuMainView(MainView):
     def __init__(self):
         super().__init__("Meni")
-        # this is just a placeholder
         #---------FORM-WINDOW-----------
         self.form = MenuForm()
 
@@ -231,16 +224,11 @@ class ReceiptMainView(MainView):
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
         self.search.setStyleSheet(search)
-        # self.rlayout.setObjectName(f"frame{i}")
-        # self.rlayout.setFrameShape(QFrame.Box)
-        # self.rlayout.setFrameShadow(QFrame.Sunken)
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar, self.button, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.table)
-        
-
     
 class WorkersMainView(MainView):
     def __init__(self):
