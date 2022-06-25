@@ -77,18 +77,14 @@ class MainWindow(QMainWindow):
 
     def switch_view(self, index):
         self.layout.setCurrentIndex(index)
-        #self.setFixedWidth(1000)
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion") 
 
-    darkTheme = DarkTheme(app.palette())
-
     window = MainWindow()
     window.setFixedSize(1240,800)
     window.show()
 
-    app.setPalette(darkTheme.pal)
+    app.setStyleSheet(qss)
     app.exec()
