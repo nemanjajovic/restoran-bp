@@ -1,95 +1,11 @@
 from styles import *
-from helper_widgets import TableModel, IconLabel
+from helper_widgets import *
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
 #from db import Connection
 from forms import *
-
-class MainView(QtWidgets.QWidget):
-    """ A layout parent class for all views, takes one string
-        argument which represents the name of the view."""
-    def __init__(self, viewName):
-        super().__init__()
-        # ----------WIDGETS----------
-        self.nameLabel = QLabel(viewName)
-        self.textBox = QTextEdit()
-
-        # ----------LAYOUTS----------
-        self.layout = QHBoxLayout()  # parent
-        self.llayout = QVBoxLayout() # left
-        self.rlayout = QVBoxLayout() # right
-
-        self.layout.addLayout(self.llayout)
-        self.layout.addLayout(self.rlayout)
-
-        self.setLayout(self.layout)
-
-        # ----------FRAMES-----------
-        self.lFrame = MyFrame(QVBoxLayout) # left
-        self.rFrame = MyFrame(QVBoxLayout) # right
-        self.tFrame = MyFrame(QHBoxLayout) # top (right)
-
-        # ----------STYLES-----------
-        self.llayout.setAlignment(Qt.AlignTop)
-        self.llayout.setContentsMargins(0, 0, 0, 0)
-        self.lFrame.layout.setAlignment(Qt.AlignTop)
-        self.tFrame.layout.setAlignment(Qt.AlignLeft)
-        self.nameLabel.setStyleSheet("QLabel{max-height:47px;padding-left:5px;font-size:20pt;}")
-        
-        # make all frames share the same properties
-        for i, frame in enumerate([self.lFrame, self.rFrame, self.tFrame]):
-            frame.setObjectName(f"frame{i}")
-            frame.setFrameShape(QFrame.Box)
-            frame.setFrameShadow(QFrame.Sunken)
-
-    def fill_llayout(self, *widgets):
-        widgets = list(widgets)
-        widgets.insert(0,self.nameLabel) # make first widget
-        self.fill(self.lFrame, self.llayout, widgets)
-    
-    def fill_rlayout(self, *widgets):
-        self.fill(self.rFrame, self.rlayout, widgets)
-
-    def fill_rtop(self, *widgets):
-        self.fill(self.tFrame, self.rlayout, widgets)
-
-    def fill(self, frame, layout, widgets):
-        layout.addWidget(frame)
-        for widget in widgets:
-            frame.layout.addWidget(widget)
-
-    def button_click(self):
-        self.textBox.append(self.sender().text())
-
-class MyFrame(QtWidgets.QFrame):
-    """ A class that wraps a QFrame around a QBoxLayout 
-        to make it easier to style, takes one QBoxLayout
-        as an argument."""
-    def __init__(self, layout):
-        super().__init__()
-        # ---------LAYOUT---------
-        self.layout = layout(self)
-        self.setLayout(self.layout)
-        
-        # ---------STYLE----------
-        self.setFrameShape(QFrame.Box)
-        self.setFrameShadow(QFrame.Sunken)
-        self.setStyleSheet(qss)
-
-class SliderLabel(QtWidgets.QWidget):
-    """ Widget that contains labels for the slider."""
-    def __init__(self):
-        super().__init__()
-
-        hbox = QHBoxLayout(self)
-        hbox.setAlignment(Qt.AlignJustify)
-
-        labels = [QLabel(str(i)) for i in range(1,13)]
-        for label in labels:
-            label.setFixedWidth(30)
-            hbox.addWidget(label)
 
 class MenuMainView(MainView):
     def __init__(self):
@@ -166,8 +82,8 @@ class ReservationMainView(MainView):
         for i in range(30):
             self.buttons.append(QPushButton())
             self.buttons[i].setIcon(self.icon)
-            self.buttons[i].setFixedSize(QSize(140,130))
-            self.buttons[i].setIconSize(QSize(140,130))
+            self.buttons[i].setFixedSize(QSize(100,100))
+            self.buttons[i].setIconSize(QSize(100,100))
             
         self.buttons[0].clicked.connect(lambda:self.test(0))
         self.buttons[1].clicked.connect(lambda:self.test(1))
@@ -185,10 +101,10 @@ class ReservationMainView(MainView):
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
         self.slider.setRange(0, 20) # 20 ticks
-        #self.freeLabel.setStyleSheet("QLabel{margin-left:50px;}")
+        self.rFrame.setObjectName(f"frame{1}")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.calendar,self.addButton,self.freeLabel, self.reservedLabel, self.takenLabel, self.textBox)
+        self.fill_llayout(self.calendar,self.addButton, self.textBox,self.freeLabel, self.reservedLabel, self.takenLabel)
         self.fill_rtop(sliderLbl, self.slider)
         #self.fill_rlayout(self.tlocrt)     
         self.fill_grid()

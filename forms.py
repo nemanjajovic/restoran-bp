@@ -2,33 +2,7 @@ from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
 #from db import Connection
-
-class MainForm(QMainWindow):
-    """ A window parent class to all data entry/editing forms."""
-    def __init__(self):
-        super().__init__()
-        # layout needs to be inside a widget to be displayed properly
-        centralWidget = QWidget()
-
-        # ----------LAYOUT-----------
-        self.layout = QGridLayout()
-        centralWidget.setLayout(self.layout)
-
-        # ----------STYLE------------
-        self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setWindowTitle("Form")
-        self.setFixedSize(640,320)
-        self.setStyleSheet(qss)
-
-        self.setCentralWidget(centralWidget)
-
-    def insert(self, table, columns, values):
-        with Connection() as handler:
-            handler.insert(table, columns, values)
-
-    def update(self, table, column, new_val, id_column, id_val):
-        with Connection() as handler:
-            handler.update(table, column, new_val, id_column, id_val)
+from helper_widgets import MainForm
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
