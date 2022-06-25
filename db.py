@@ -1,6 +1,7 @@
 import pyodbc
 
 class Connection:
+    """Context manager for database connections."""
     def __init__(self):
         pass
 
@@ -14,6 +15,8 @@ class Connection:
             self.handler.conn.close()
 
 class DbHandler:
+    """ Database handler class with basic database 
+        interdace methods."""
     def __init__(self):
         self.conn = pyodbc.connect(
             "Driver={SQL Server Native Client 11.0};"
