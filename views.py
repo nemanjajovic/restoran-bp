@@ -170,25 +170,25 @@ class ReservationMainView(MainView):
             self.buttons[i].setIconSize(QSize(140,130))
             
         self.buttons[0].clicked.connect(lambda:self.test(0))
+        self.buttons[1].clicked.connect(lambda:self.test(1))
 
         self.addButton = QPushButton("+ Reservation")
         self.tlocrt = QLabel("Tlocrt") # placeholder
         self.calendar = QCalendarWidget()
         sliderLbl = SliderLabel()
         self.slider = QSlider(Qt.Horizontal)
-        self.infoLabels = QLabel("""
-                - Slobodno
-                - Zauzeto
-                - Rezervisano""")
+        self.freeLabel = IconLabel("assets/freeTable.png", "-  Slobodno")
+        self.reservedLabel = IconLabel("assets/reservedTable.png", "-  Rezervisano")
+        self.takenLabel = IconLabel("assets/takenTable.png", "-  Zauzeto")
 
         # ---------STYLES---------------
         self.tlocrt.setStyleSheet(tlo)
         self.calendar.setStyleSheet(cal)
-        self.infoLabels.setAlignment(Qt.AlignBottom)
         self.slider.setRange(0, 20) # 20 ticks
+        #self.freeLabel.setStyleSheet("QLabel{margin-left:50px;}")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.calendar,self.addButton,self.infoLabels, self.textBox)
+        self.fill_llayout(self.calendar,self.addButton,self.freeLabel, self.reservedLabel, self.takenLabel, self.textBox)
         self.fill_rtop(sliderLbl, self.slider)
         #self.fill_rlayout(self.tlocrt)     
         self.fill_grid()
@@ -261,3 +261,27 @@ class WorkersMainView(MainView):
         # test prints 'Svi'
         print(name)
 
+class IconLabel(QWidget):
+
+    IconSize = QSize(24, 24)
+    HorizontalSpacing = 2
+
+    def __init__(self, icon_path, text, final_stretch=True):
+        super().__init__()
+
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+
+        icon = QLabel()
+        icon.setPixmap(QIcon(icon_path).pixmap(self.IconSize))
+
+        layout.addWidget(QLabel("                                      "))      
+        layout.addWidget(icon)
+        #layout.addSpacing(self.HorizontalSpacing)
+        layout.addWidget(QLabel(text))
+        #layout.setAlignment(Qt.AlignRight)
+        #icon.setStyleSheet("QLabel{max-width:16px'}")
+
+        if final_stretch:
+            layout.addStretch()
