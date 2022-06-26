@@ -4,7 +4,7 @@ from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
-#from db import Connection
+from db import Connection
 from forms import *
 
 class MenuMainView(MainView):
@@ -152,11 +152,14 @@ class WorkersMainView(MainView):
         # this is just a placeholder
         columns = ["gasdgsad", "shdah", "ASF"]
 
+        self.workerForm = WorkerAddForm()
+
         # ---------WIDGETS--------------
         b1 = QPushButton("Svi")
         b2 = QPushButton("Servis")
         b3 = QPushButton("Kuhinja")
         b4 = QPushButton("Pomocni")
+        self.addWorkerButton = QPushButton("+ Novi Radnik")
         self.search = QLineEdit()
 
         self.table = QtWidgets.QTableView()
@@ -165,14 +168,11 @@ class WorkersMainView(MainView):
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
+        self.addWorkerButton.setStyleSheet(add)
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(b1,b2,b3,b4, self.textBox)
-        self.fill_rtop(self.search)
+        self.fill_rtop(self.search, self.addWorkerButton)
         self.fill_rlayout(self.table)
 
-        b1.clicked.connect(lambda:self.test(b1.text()))
-    
-    def test(self, name):
-        # test prints 'Svi'
-        print(name)
+        self.addWorkerButton.clicked.connect(self.workerForm.show)
