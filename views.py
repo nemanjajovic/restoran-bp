@@ -74,7 +74,7 @@ class ReservationMainView(MainView):
         self.tFrame = MyFrame(QVBoxLayout)
         self.tFrame.setObjectName("frame2")
         self.addForm = ReservationAddForm()
-
+        
         self.rFrame = MyFrame(QGridLayout)
 
         # ---------WIDGETS--------------
@@ -82,10 +82,11 @@ class ReservationMainView(MainView):
         self.buttons = []
         for i in range(30):
             self.buttons.append(QPushButton())
-            self.buttons[i].setIcon(self.icon)
-            self.buttons[i].setFixedSize(QSize(100,100))
-            self.buttons[i].setIconSize(QSize(120,120))
-            self.buttons[i].pressed.connect(lambda i=i+1: self.test(i))
+            butt = self.buttons[i]
+            butt.setIcon(self.icon)
+            butt.setFixedSize(QSize(100,100))
+            butt.setIconSize(QSize(120,120))
+            butt.pressed.connect(lambda i=i+1: self.test(i))
             
         self.addButton = QPushButton("+ Reservation")
         self.filler = QLabel()
@@ -110,20 +111,25 @@ class ReservationMainView(MainView):
         self.addButton.clicked.connect(self.addForm.show)
 
     def test(self, number):
-        print(number)
+        self.tableForm = TableForm()
+        self.tableForm.name_label.setText(str(number))
+        self.tableForm.show()
 
     def fill_grid(self):
         self.rlayout.addWidget(self.rFrame)
         self.rlayout.setContentsMargins(0, 0, 0, 0)
         x = 0
+        counter = 1
         for i in range(6):
             for j in range(5):
                 # skip showing these tables
                 if x in [3,8,10,11,12,13,16,18,21,23,28]:
                     x += 1
                     continue
+                self.buttons[x].pressed.connect(lambda i=counter: self.test(i))
                 self.rFrame.layout.addWidget(self.buttons[x],i,j)
                 x += 1
+                counter += 1
         self.rFrame.layout.addWidget(self.filler,0,3)
 
 
