@@ -106,15 +106,21 @@ class ReservationAddForm(MainForm):
 
 class WorkerAddForm(MainForm):
     """ A form window for the workers table."""
+    tipovi = ["Servis", "Kuhinja", "Pomocni"]
     def __init__(self):
         super().__init__()
         # ----------WIDGETS----------
         self.name   = QLineEdit()
-        self.type= QLineEdit()
+        self.surname= QLineEdit()
         self.button = QPushButton("Confirm")
 
+        # ComboBox
+        self.type= QComboBox()
+        for elem in self.tipovi:
+            self.type.addItem(elem)
+
         # labels
-        lnames = ["Naziv: ", "Tip (servis ili kuhinja): "]
+        lnames = ["Ime: ", "Prezime: ", "Tip: "]
         for i,text in enumerate(lnames):
             label = QLabel(text)
             label.setAlignment(Qt.AlignRight)
@@ -122,10 +128,12 @@ class WorkerAddForm(MainForm):
 
         # ----------LAYOUT----------
         self.layout.addWidget(self.name, 0, 1)
-        self.layout.addWidget(self.type, 1, 1)
-        self.layout.addWidget(self.button, 2, 1)
+        self.layout.addWidget(self.surname, 1, 1)
+        self.layout.addWidget(self.type, 2, 1)
+        self.layout.addWidget(self.button, 3, 1)
 
         # ----------STYLES---------
+        self.type.setStyleSheet("QComboBox{max-width:300px;}")
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:100px;}QLineEdit{max-width:300px;margin-right:30px;}QLabel{font-size:20px;margin-left:20px;}")
         self.setFixedSize(500,340)
 
