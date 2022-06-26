@@ -80,7 +80,7 @@ class ReservationMainView(MainView):
         # ---------WIDGETS--------------
         self.icon= QIcon("assets/freeTable.png")
         self.buttons = []
-        for i in range(30):
+        for i in range(20):
             self.buttons.append(QPushButton())
             butt = self.buttons[i]
             butt.setIcon(self.icon)
@@ -98,14 +98,16 @@ class ReservationMainView(MainView):
         self.takenLabel = IconLabel("assets/takenTable.png", "-  Zauzeto")
 
         # ---------STYLES---------------
-        self.filler.setStyleSheet("QLabel{max-width:40px}")
+        self.filler.setStyleSheet("QLabel{max-width:40px;max-height:40px;}")
         self.calendar.setStyleSheet(cal)
-        self.slider.setRange(0, 20) # 20 ticks
+        self.slider.setRange(0, 10) # 20 ticks
         self.rFrame.setObjectName(f"frame{1}")
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar,self.addButton, self.textBox,self.freeLabel, self.reservedLabel, self.takenLabel)
         self.fill_rtop(sliderLbl, self.slider)  
+        self.rlayout.addWidget(self.rFrame)
+        self.rlayout.setContentsMargins(0, 0, 0, 0)
         self.fill_grid()
 
         self.addButton.clicked.connect(self.addForm.show)
@@ -116,22 +118,18 @@ class ReservationMainView(MainView):
         self.tableForm.show()
 
     def fill_grid(self):
-        self.rlayout.addWidget(self.rFrame)
-        self.rlayout.setContentsMargins(0, 0, 0, 0)
-        x = 0
-        counter = 1
-        for i in range(6):
-            for j in range(5):
-                # skip showing these tables
-                if x in [3,8,10,11,12,13,16,18,21,23,28]:
-                    x += 1
+        index = 0
+        for i in range(5):
+            for j in range(6):
+                button = self.buttons[index]
+                # skip 2nd column and 3rd row
+                if i == 2 or j == 3:
                     continue
-                self.buttons[x].pressed.connect(lambda i=counter: self.test(i))
-                self.rFrame.layout.addWidget(self.buttons[x],i,j)
-                x += 1
-                counter += 1
-        self.rFrame.layout.addWidget(self.filler,0,3)
-
+                button.pressed.connect(lambda i=index+1: self.test(i))
+                self.rFrame.layout.addWidget(button,i,j)
+                index += 1
+        self.buttons[5].setIcon(QIcon("assets/reservedTable.png"))
+        self.rFrame.layout.addWidget(self.filler, 2, 3)
 
 class ReceiptMainView(MainView):
     def __init__(self):
@@ -179,7 +177,7 @@ class WorkersMainView(MainView):
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
-        self.addWorkerButton.setStyleSheet(add)
+        self.addWorkerButton.setStyleSheet("QPushButton{max-width:120px;}")
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(b1,b2,b3,b4, self.textBox)
