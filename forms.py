@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
-#from db import Connection
+from db import Connection
 from helper_widgets import MainForm
 
 class MenuForm(MainForm):
@@ -99,3 +99,35 @@ class ReservationAddForm(MainForm):
         # ----------STYLES---------
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
         self.setFixedSize(500,340)
+
+class WorkerAddForm(MainForm):
+    """ A form window for the workers table."""
+    def __init__(self):
+        super().__init__()
+        # ----------WIDGETS----------
+        self.name   = QLineEdit()
+        self.type= QLineEdit()
+        self.button = QPushButton("Confirm")
+
+        # labels
+        lnames = ["Naziv: ", "Tip (servis ili kuhinja): "]
+        for i,text in enumerate(lnames):
+            label = QLabel(text)
+            label.setAlignment(Qt.AlignRight)
+            self.layout.addWidget(label, i, 0)
+
+        # ----------LAYOUT----------
+        self.layout.addWidget(self.name, 0, 1)
+        self.layout.addWidget(self.type, 1, 1)
+        self.layout.addWidget(self.button, 2, 1)
+
+        # ----------STYLES---------
+        self.setStyleSheet("QPushButton{max-width:100px;margin-left:100px;}QLineEdit{max-width:300px;margin-right:30px;}QLabel{font-size:20px;margin-left:20px;}")
+        self.setFixedSize(500,340)
+
+        self.button.clicked.connect(self.confirm)
+
+    def confirm(self):
+        values = f"'{self.name.text()}','{self.type.text()}','00:00:00'"
+        with Connection() as handler:
+            handler.insert("Radnici", "radnik_naziv,radnik_tip,radnik_sati", values)
