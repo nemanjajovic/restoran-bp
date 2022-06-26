@@ -4,7 +4,7 @@ from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
-from db import Connection
+#from db import Connection
 from forms import *
 
 class MenuMainView(MainView):
@@ -84,12 +84,9 @@ class ReservationMainView(MainView):
             self.buttons.append(QPushButton())
             self.buttons[i].setIcon(self.icon)
             self.buttons[i].setFixedSize(QSize(100,100))
-            self.buttons[i].setIconSize(QSize(100,100))
-            self.buttons[i].clicked.connect(lambda i=i:self.test(i))    
-
-        # self.buttons[0].clicked.connect(lambda:self.test(0))
-        # self.buttons[1].clicked.connect(lambda:self.test(1))
-
+            self.buttons[i].setIconSize(QSize(120,120))
+            self.buttons[i].pressed.connect(lambda i=i+1: self.test(i))
+            
         self.addButton = QPushButton("+ Reservation")
         self.filler = QLabel()
         self.calendar = QCalendarWidget()
@@ -107,13 +104,13 @@ class ReservationMainView(MainView):
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.calendar,self.addButton, self.textBox,self.freeLabel, self.reservedLabel, self.takenLabel)
-        self.fill_rtop(sliderLbl, self.slider)
-        #self.fill_rlayout(self.tlocrt)     
+        self.fill_rtop(sliderLbl, self.slider)  
         self.fill_grid()
+
         self.addButton.clicked.connect(self.addForm.show)
 
-    def test(self, n):
-        print(n)
+    def test(self, number):
+        print(number)
 
     def fill_grid(self):
         self.rlayout.addWidget(self.rFrame)
@@ -121,6 +118,7 @@ class ReservationMainView(MainView):
         x = 0
         for i in range(6):
             for j in range(5):
+                # skip showing these tables
                 if x in [3,8,10,11,12,13,16,18,21,23,28]:
                     x += 1
                     continue
