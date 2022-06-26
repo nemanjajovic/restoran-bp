@@ -164,10 +164,7 @@ class WorkersMainView(MainView):
         self.workerForm = WorkerAddForm()
 
         # ---------WIDGETS--------------
-        b1 = QPushButton("Svi")
-        b2 = QPushButton("Servis")
-        b3 = QPushButton("Kuhinja")
-        b4 = QPushButton("Pomocni")
+        self.buttons = [QPushButton(label) for label in ["Svi","Servis","Kuhinja","Pomocni"]]
         self.addWorkerButton = QPushButton("+ Novi Radnik")
         self.search = QLineEdit()
 
@@ -180,8 +177,9 @@ class WorkersMainView(MainView):
         self.addWorkerButton.setStyleSheet("QPushButton{max-width:120px;}")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(b1,b2,b3,b4, self.textBox)
+        self.fill_llayout(self.buttons[0],self.buttons[1],self.buttons[2],self.buttons[3], self.textBox)
         self.fill_rtop(self.search, self.addWorkerButton)
         self.fill_rlayout(self.table)
 
+        # --------BUTTON-ACTIONS--------
         self.addWorkerButton.clicked.connect(self.workerForm.show)
