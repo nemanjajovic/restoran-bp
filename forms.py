@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
-#from db import Connection
+from db import Connection
 from helper_widgets import MainForm
 
 class MenuForm(MainForm):
@@ -140,9 +140,9 @@ class WorkerAddForm(MainForm):
         self.button.clicked.connect(self.confirm)
 
     def confirm(self):
-        values = f"'{self.name.text()}','{self.type.text()}','00:00:00'"
+        values = f"'{self.name.text()}','{self.surname.text()}','{self.type.currentText()}','00:00:00'"
         with Connection() as handler:
-            handler.insert("Radnici", "radnik_naziv,radnik_tip,radnik_sati", values)
+            handler.insert("Radnici", "radnik_ime,radnik_prezime,radnik_tip,radnik_sati", values)
 
 class TableForm(MainForm):
     """ A form window for the individual tables."""
