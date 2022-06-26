@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
-from db import Connection
+#from db import Connection
 from helper_widgets import MainForm
 
 class MenuForm(MainForm):
@@ -32,7 +32,6 @@ class MenuForm(MainForm):
         # ----------STYLES---------
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
         self.setFixedSize(500,340)
-
 
 class ScheduleAddForm(MainForm):
     """ A form window for the schedule table."""
@@ -136,3 +135,18 @@ class WorkerAddForm(MainForm):
         values = f"'{self.name.text()}','{self.type.text()}','00:00:00'"
         with Connection() as handler:
             handler.insert("Radnici", "radnik_naziv,radnik_tip,radnik_sati", values)
+
+class TableForm(MainForm):
+    """ A form window for the individual tables."""
+    def __init__(self):
+        super().__init__()
+
+        label = QLabel("")
+        label.setAlignment(Qt.AlignRight)
+        label.setStyleSheet("QLabel{font-size:30px}")
+        self.layout.addWidget(label, 0, 0)
+
+        self.name_label = QLabel()
+        self.layout.addWidget(self.name_label, 0, 1)
+        self.name_label.setStyleSheet("QLabel{font-size:30px}")
+        self.setFixedSize(500,340)
