@@ -74,17 +74,24 @@ class MyFrame(QFrame):
         self.setStyleSheet(qss)
 
 class SliderLabel(QWidget):
-    """ Widget that contains labels for the slider."""
+    """ Widget that contains time labels for the slider."""
     def __init__(self):
         super().__init__()
 
         hbox = QHBoxLayout(self)
         hbox.setAlignment(Qt.AlignJustify)
+        time = []
+        for i in range(1,11):
+            time.append(str(i))
+        time.insert(0,"12")
 
-        labels = [QLabel(str(i)) for i in range(1,13)]
+        labels = [QLabel(i) for i in time]
         for label in labels:
-            label.setFixedWidth(30)
+            label.setFixedWidth(73)
+            label.setStyleSheet("QLabel{font-size:16px;}")
+            label.setAlignment(Qt.AlignCenter)
             hbox.addWidget(label)
+  
 
 class MainForm(QMainWindow):
     """ A window parent class to all data entry/editing forms."""
