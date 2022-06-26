@@ -21,7 +21,7 @@ class DbHandler:
         self.conn = pyodbc.connect(
             "Driver={SQL Server Native Client 11.0};"
             "Server=DESKTOP-1P60H2U;"
-            "Database=Test;"
+            "Database=BetaTest;"
             "Trusted_Connection=yes;"
         )
         self.cursor = self.conn.cursor()
@@ -44,5 +44,9 @@ class DbHandler:
         return self.cursor.execute(command)
 
     def get_column_names(self, table):
+        columns = []
         command = f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{table}'"
-        return self.cursor.execute(command)
+        rows = self.cursor.execute(command)
+        for row in rows:
+            columns.append(row[3]) # third elem is name
+        return columns 
