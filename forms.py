@@ -99,6 +99,11 @@ class ReservationAddForm(MainForm):
         # ----------STYLES---------
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
         self.setFixedSize(500,340)
+        
+    def confirm(self):
+        values = f"'{self.name.text()}','{self.type.text()}','00:00:00'"
+        with Connection() as handler:
+            handler.insert("Radnici", "radnik_naziv,radnik_tip,radnik_sati", values)    
 
 class WorkerAddForm(MainForm):
     """ A form window for the workers table."""
