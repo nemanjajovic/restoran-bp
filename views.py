@@ -4,11 +4,15 @@ from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
-#from db import Connection
+from db import Connection
 from forms import *
 
 class MenuMainView(MainView):
     def __init__(self):
+        # column names
+        with Connection() as handler:
+            columns = handler.get_column_names("MeniArtikli")
+
         super().__init__("Meni")
         #---------FORM-WINDOW-----------
         self.form = MenuForm()
@@ -18,19 +22,17 @@ class MenuMainView(MainView):
         self.addItem = QPushButton("+ Add Item")
         self.butt1 = QPushButton("PICE")
         self.butt2 = QPushButton("HRANA")
-        column_list = []
 
-        # with Connection() as handler:
-        #     columns = handler.get_column_names("Narudzbe")
-        #     for column in columns:
-        #         column_list.append(column[3])
         self.table = QtWidgets.QTableView()
-        self.tableWidget = TableModel(column_list)
+        self.tableWidget = TableModel(columns)
         self.table.setModel(self.tableWidget)
+        header = self.table.horizontalHeader()
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
         self.addItem.setStyleSheet(add)
+        for i in range(len(columns)):
+            header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeToContents)
         
         # --------FILL-LAYOUTS----------
         self.fill_llayout(self.butt1, self.butt2, self.textBox)
@@ -43,9 +45,9 @@ class MenuMainView(MainView):
 
 class ScheduleMainView(MainView):
     def __init__(self):
+        with Connection() as handler:
+            columns = handler.get_column_names("Raspored")
         super().__init__("Raspored")
-        # this is just a placeholder
-        columns = ["gasdgsad", "shdah", "ASF"]
         self.addForm = ScheduleAddForm()
 
         # ---------WIDGETS--------------
@@ -133,10 +135,9 @@ class ReservationMainView(MainView):
 
 class ReceiptMainView(MainView):
     def __init__(self):
+        with Connection() as handler:
+            columns = handler.get_column_names("Racuni")
         super().__init__("Racuni")
-        # this is just a placeholder
-        columns = ["gasdgsad", "shdah", "ASF"]
-    
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
@@ -157,10 +158,10 @@ class ReceiptMainView(MainView):
     
 class WorkersMainView(MainView):
     def __init__(self):
+        with Connection() as handler:
+            columns = handler.get_column_names("Radnici")
+            
         super().__init__("Radnici")
-        # this is just a placeholder
-        columns = ["gasdgsad", "shdah", "ASF"]
-
         self.workerForm = WorkerAddForm()
 
         # ---------WIDGETS--------------
