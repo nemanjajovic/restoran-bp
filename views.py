@@ -67,6 +67,7 @@ class ScheduleMainView(MainView):
         self.addButton.clicked.connect(self.addForm.show)
 
 class ReservationMainView(MainView):
+    placed = [0,]
     def __init__(self):
         super().__init__("Rezervacije")
         # override default (horizontal) MainView layout
@@ -84,12 +85,13 @@ class ReservationMainView(MainView):
             self.buttons[i].setIcon(self.icon)
             self.buttons[i].setFixedSize(QSize(100,100))
             self.buttons[i].setIconSize(QSize(100,100))
-            
-        self.buttons[0].clicked.connect(lambda:self.test(0))
-        self.buttons[1].clicked.connect(lambda:self.test(1))
+            self.buttons[i].clicked.connect(lambda i=i:self.test(i))    
+
+        # self.buttons[0].clicked.connect(lambda:self.test(0))
+        # self.buttons[1].clicked.connect(lambda:self.test(1))
 
         self.addButton = QPushButton("+ Reservation")
-        self.tlocrt = QLabel("Tlocrt") # placeholder
+        self.filler = QLabel()
         self.calendar = QCalendarWidget()
         sliderLbl = SliderLabel()
         self.slider = QSlider(Qt.Horizontal)
@@ -98,7 +100,7 @@ class ReservationMainView(MainView):
         self.takenLabel = IconLabel("assets/takenTable.png", "-  Zauzeto")
 
         # ---------STYLES---------------
-        self.tlocrt.setStyleSheet(tlo)
+        self.filler.setStyleSheet("QLabel{max-width:40px}")
         self.calendar.setStyleSheet(cal)
         self.slider.setRange(0, 20) # 20 ticks
         self.rFrame.setObjectName(f"frame{1}")
@@ -115,11 +117,16 @@ class ReservationMainView(MainView):
 
     def fill_grid(self):
         self.rlayout.addWidget(self.rFrame)
+        self.rlayout.setContentsMargins(0, 0, 0, 0)
         x = 0
         for i in range(6):
             for j in range(5):
+                if x in [3,8,10,11,12,13,16,18,21,23,28]:
+                    x += 1
+                    continue
                 self.rFrame.layout.addWidget(self.buttons[x],i,j)
                 x += 1
+        self.rFrame.layout.addWidget(self.filler,0,3)
 
 
 class ReceiptMainView(MainView):
