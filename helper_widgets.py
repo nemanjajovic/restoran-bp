@@ -91,7 +91,6 @@ class SliderLabel(QWidget):
             label.setStyleSheet("QLabel{font-size:16px;}")
             label.setAlignment(Qt.AlignCenter)
             hbox.addWidget(label)
-  
 
 class MainForm(QMainWindow):
     """ A window parent class to all data entry/editing forms."""
@@ -168,3 +167,20 @@ class IconLabel(QWidget):
         if final_stretch:
             layout.addStretch()
 
+class Reservations():
+    def __init__(self):
+        super().__init__()
+
+        self.hours = {
+            "12": None,
+            "1":  None,
+            "2":  None,
+            "3":  None,
+            "4":  None,
+            "5":  None,
+            "6":  None,
+            "7":  None,
+            "8":  None,
+            "9":  None,
+            "10": None,
+        }
