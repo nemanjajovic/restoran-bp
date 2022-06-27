@@ -12,11 +12,11 @@ class MainWindow(QMainWindow):
         self.layout = QStackedWidget()
         
         # add widgets on the stack
-        self.layout.addWidget(MenuMainView())
-        self.layout.addWidget(ScheduleMainView())
-        self.layout.addWidget(ReservationMainView())
-        self.layout.addWidget(ReceiptMainView())
-        self.layout.addWidget(WorkersMainView())
+        self.layout.addWidget(MenuMainView("MeniArtikli"))
+        self.layout.addWidget(ScheduleMainView("Raspored"))
+        self.layout.addWidget(ReservationMainView("Rezervacije"))
+        self.layout.addWidget(ReceiptMainView("Racuni"))
+        self.layout.addWidget(WorkersMainView("Radnici"))
 
         # ----------STYLE-----------
         self.setWindowTitle("My App")
