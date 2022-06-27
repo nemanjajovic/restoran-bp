@@ -3,6 +3,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
 from PySide6.QtGui import QPixmap, QIcon
 from styles import *
+from db import Connection
 
 class MainView(QWidget):
     """ A layout parent class for all views, takes one string
@@ -54,6 +55,12 @@ class MainView(QWidget):
         layout.addWidget(frame)
         for widget in widgets:
             frame.layout.addWidget(widget)
+    
+    def get_column_string(self, list):
+        string = ""
+        for word in list[1:]:
+            string += word + ','
+        return string[:-1]
 
     def button_click(self):
         self.textBox.append(self.sender().text())
@@ -71,7 +78,7 @@ class MyFrame(QFrame):
         # ---------STYLE----------
         self.setFrameShape(QFrame.Box)
         self.setFrameShadow(QFrame.Sunken)
-        self.setStyleSheet(qss)
+        self.setStyleSheet(qss+"QFrame{background-color: #333333;}")
 
 class SliderLabel(QWidget):
     """ Widget that contains time labels for the slider."""
@@ -94,7 +101,7 @@ class SliderLabel(QWidget):
 
 class MainForm(QMainWindow):
     """ A window parent class to all data entry/editing forms."""
-    def __init__(self):
+    def __init__(self, table, columns):
         super().__init__()
         # layout needs to be inside a widget to be displayed properly
         centralWidget = QWidget()
@@ -118,33 +125,6 @@ class MainForm(QMainWindow):
     def update(self, table, column, new_val, id_column, id_val):
         with Connection() as handler:
             handler.update(table, column, new_val, id_column, id_val)
-
-class TableModel(QAbstractTableModel):
-    def __init__(self, col=[], rows=[]):
-        super().__init__()
-        self._data = pd.DataFrame(
-            [],
-            columns = col,
-            index = rows,
-        )
-
-    def data(self, index, role):
-        if role == Qt.DisplayRole:
-            value = self._data.iloc[index.row(), index.column()]
-            return str(value)
-
-    def rowCount(self, index):
-        return self._data.shape[0]
-
-    def columnCount(self, index):
-        return self._data.shape[1]
-
-    def headerData(self, section, orientation, role):
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
-                return str(self._data.columns[section])
-            if orientation == Qt.Vertical:
-                return str(self._data.index[section])
 
 class IconLabel(QWidget):
     """A class combining an icon and text."""
