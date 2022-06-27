@@ -1035,7 +1035,11 @@ TalkingUI > QFrame {
         """
 
 search = """
-    max-width:300px;
+    QWidget {
+      background-color: #333333;
+      color: #fffff8; 
+      max-width:300px;
+      }
 """
 add = """
     max-width:100px;
