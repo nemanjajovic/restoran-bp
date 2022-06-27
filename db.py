@@ -27,9 +27,15 @@ class DbHandler:
         self.cursor = self.conn.cursor()
 
     def select(self, columns, table, condition):
+        rows = []
         cond = f"WHERE {condition}" if condition else ""
         command = f"""SELECT {columns} FROM {table} {cond};"""
-        return self.cursor.execute(command)
+        for row in self.cursor.execute(command):
+            temp = []
+            for cell in row:
+                temp.append(cell)
+            rows.append(temp)
+        return rows
 
     def insert(self, table, columns, values):
         command = f"INSERT INTO {table} ({columns}) VALUES ({values})"
@@ -44,9 +50,13 @@ class DbHandler:
         return self.cursor.execute(command)
 
     def get_column_names(self, table):
-        columns = []
-        command = f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{table}'"
-        rows = self.cursor.execute(command)
+        """ Returns a list and comma separated string of column 
+            names from the given table. The list is for setting table 
+            column headers, and the string for a database query."""
+
+        column_list, columns = [], "" 
+        rows = self.cursor.execute(f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{table}'")
         for row in rows:
-            columns.append(row[3]) # third elem is name
-        return columns 
+            columns += row[3] + ',' # third elem is name
+            column_list.append(row[3])
+        return column_list, columns[:-1] 
