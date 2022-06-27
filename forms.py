@@ -1,19 +1,22 @@
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
-from db import Connection
+
 from helper_widgets import MainForm
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
-    def __init__(self):
-        super().__init__()
+    def __init__(self, table, columns):
+        super().__init__(table, columns)
         # ---------WIDGETS---------
         self.name = QLineEdit()
-        self.type = QLineEdit()
+        self.type = QComboBox()
         self.category = QLineEdit()
         self.price = QLineEdit()
         self.button = QPushButton("Confirm")
+
+        self.type.addItem("Pice")
+        self.type.addItem("Hrana")
 
         # labels
         lnames = ["Naziv: ", "Tip: ", "Kategorija: ", "Cijena: "]
@@ -30,13 +33,20 @@ class MenuForm(MainForm):
         self.layout.addWidget(self.button, 4, 1)
 
         # ----------STYLES---------
+        self.type.setStyleSheet("QComboBox{max-width:257px;}")
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
         self.setFixedSize(500,340)
 
+        self.button.pressed.connect(lambda: self.confirm(table, columns))
+
+    def confirm(self,table,columns):     
+        values = f"'{self.name.text()}','{self.type.currentText()}','{self.category.text()}','{self.price.text()}'"
+        self.insert(table, columns, values)
+
 class ScheduleAddForm(MainForm):
     """ A form window for the schedule table."""
-    def __init__(self):
-        super().__init__()
+    def __init__(self, table, columns):
+        super().__init__(table, columns)
         # ---------WIDGETS---------
         self.date = QLineEdit()
         self.worker = QLineEdit()
@@ -68,8 +78,8 @@ class ScheduleWeekForm(MainForm):
 
 class ReservationAddForm(MainForm):
     """ A form window for the reservations table."""
-    def __init__(self):
-        super().__init__()
+    def __init__(self, table, columns):
+        super().__init__(table, columns)
         # ---------WIDGETS---------
         self.nr_of_guests = QLineEdit()
         self.time   = QLineEdit()
@@ -107,8 +117,8 @@ class ReservationAddForm(MainForm):
 class WorkerAddForm(MainForm):
     """ A form window for the workers table."""
     tipovi = ["Servis", "Kuhinja", "Pomocni"]
-    def __init__(self):
-        super().__init__()
+    def __init__(self, table, columns):
+        super().__init__(table, columns)
         # ----------WIDGETS----------
         self.name   = QLineEdit()
         self.surname= QLineEdit()
@@ -137,15 +147,14 @@ class WorkerAddForm(MainForm):
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:100px;}QLineEdit{max-width:300px;margin-right:30px;}QLabel{font-size:20px;margin-left:20px;}")
         self.setFixedSize(500,340)
 
-        self.button.clicked.connect(self.confirm)
+        self.button.pressed.connect(lambda:self.confirm(table,columns))
 
-    def confirm(self):
-        values = f"'{self.name.text()}','{self.surname.text()}','{self.type.currentText()}','00:00:00'"
-        with Connection() as handler:
-            handler.insert("Radnici", "radnik_ime,radnik_prezime,radnik_tip,radnik_sati", values)
+    def confirm(self,table,columns):     
+        values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
+        self.insert(table, columns, values)
 
 class TableForm(MainForm):
-    """ A form window for the individual tables."""
+    """ A form window for the individual restaurant tables."""
     def __init__(self):
         super().__init__()
 
