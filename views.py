@@ -11,14 +11,15 @@ class MenuMainView(MainView):
     def __init__(self, tableName):
         # column names
         with Connection() as handler:
-            column_list, columns = handler.get_column_names(tableName)
-            query, rows = handler.select("*", tableName, "")
-        t = [[None for i in range(len(column_list))]]
+            self.column_list, columns = handler.get_column_names(tableName)
+            query, self.rows = handler.select("*", tableName, "")
         super().__init__(tableName)
-        columns = self.get_column_string(column_list)
+        columns = get_column_string(self.column_list)
 
+        self.tableWidget = Table(self.rows, self.column_list)
         #---------FORM-WINDOW-----------
-        self.form = MenuForm(tableName, columns)
+        # send rFrame to destroy table widget and make new
+        self.form = MenuForm(tableName, columns, self.rFrame)
 
         # ---------WIDGETS--------------
         self.search = QLineEdit()
@@ -26,8 +27,6 @@ class MenuMainView(MainView):
         self.allButton = QPushButton("SVE")
         self.drinksButton = QPushButton("PICE")
         self.foodbutton = QPushButton("HRANA")
-
-        self.tableWidget = Table(rows, column_list)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
@@ -38,10 +37,17 @@ class MenuMainView(MainView):
         self.fill_rtop(self.search, self.addItem)
         self.fill_rlayout(self.tableWidget)
         
-        self.addItem.clicked.connect(self.form.show)
+        self.addItem.clicked.connect(self.on_click)
 
         self.textBox.append(query)
         self.textBox.append("---------------------------------------------------")
+
+    def on_click(self):
+        self.form.textBox  = self.textBox
+        self.form.table = self.tableWidget
+        self.form.col_list = self.column_list
+        self.form.show()
+
 
 class ScheduleMainView(MainView):
     def __init__(self, tableName):
@@ -49,7 +55,7 @@ class ScheduleMainView(MainView):
             column_list, columns = handler.get_column_names(tableName)
         t =[ [None for i in range(len(column_list))]]
         super().__init__(tableName)
-        columns = self.get_column_string(column_list)
+        columns = get_column_string(column_list)
         self.addForm = ScheduleAddForm(tableName,columns)
 
         # ---------WIDGETS--------------
@@ -75,7 +81,7 @@ class ReservationMainView(MainView):
         with Connection() as handler:
             column_list, columns = handler.get_column_names(tableName)
         super().__init__(tableName)
-        columns = self.get_column_string(column_list)
+        columns = get_column_string(column_list)
         # override default (horizontal) MainView layout
         self.tFrame = MyFrame(QVBoxLayout)
         self.tFrame.setObjectName("frame2")
@@ -173,7 +179,7 @@ class WorkersMainView(MainView):
             column_list, columns = handler.get_column_names(tableName)
             query, rows = handler.select("*", tableName, "")        
         super().__init__(tableName)
-        columns = self.get_column_string(column_list)
+        columns = get_column_string(column_list)
         self.workerForm = WorkerAddForm(tableName, columns)
 
         # ---------WIDGETS--------------
