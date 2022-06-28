@@ -34,6 +34,8 @@ class MainView(QWidget):
         self.llayout.setContentsMargins(0, 0, 0, 0)
         self.lFrame.layout.setAlignment(Qt.AlignTop)
         self.tFrame.layout.setAlignment(Qt.AlignLeft)
+        self.textBox.setStyleSheet("QTextEdit{background:#404040}")
+        self.textBox.setReadOnly(True)
         self.nameLabel.setStyleSheet("QLabel{max-height:47px;padding-left:5px;font-size:20pt;}")
         
         # set frame names
@@ -146,6 +148,30 @@ class IconLabel(QWidget):
 
         if final_stretch:
             layout.addStretch()
+
+class Table(QTableWidget):
+    def __init__(self, rows, columns):
+        super().__init__(len(rows),len(columns))
+        self.rows = rows
+        self.columns = columns
+        # (program width - left frame) / nr of col
+        col_width = int(865/len(columns))
+
+        # ----------STYLES---------
+        self.setHorizontalHeaderLabels(columns)
+        self.verticalHeader().setVisible(False)
+        self.horizontalHeader().setMinimumSectionSize(col_width)
+        self.setStyleSheet("QHeaderView {margin-left: 12px }")
+
+        self.populate_table()
+
+    def populate_table(self):
+        for i, row in enumerate(self.rows):
+            for j in range(len(self.columns)):
+                item = QTableWidgetItem(str(row[j]))
+                item.setTextAlignment(Qt.AlignCenter)
+                self.setItem(i, j, item)
+
 
 class Reservations():
     def __init__(self):
