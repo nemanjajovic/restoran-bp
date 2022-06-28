@@ -1,19 +1,20 @@
 from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
-
-from helper_widgets import MainForm
+from db import Connection
+from helper_widgets import MainForm, Table, get_column_string
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
-    def __init__(self, table, columns):
-        super().__init__(table, columns)
+    def __init__(self, tableName, columns, frame):
+        super().__init__(tableName, columns)
         # ---------WIDGETS---------
         self.name = QLineEdit()
         self.type = QComboBox()
         self.category = QLineEdit()
         self.price = QLineEdit()
         self.button = QPushButton("Confirm")
+        self.rFrame = frame
 
         self.type.addItem("Pice")
         self.type.addItem("Hrana")
@@ -37,11 +38,20 @@ class MenuForm(MainForm):
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
         self.setFixedSize(500,340)
 
-        self.button.pressed.connect(lambda: self.confirm(table, columns))
+        self.button.pressed.connect(lambda: self.confirm(tableName, columns))
 
-    def confirm(self,table,columns):     
+    def confirm(self,tableName,columns):     
         values = f"'{self.name.text()}','{self.type.currentText()}','{self.category.text()}','{self.price.text()}'"
-        self.insert(table, columns, values)
+        self.insert(tableName, columns, values)
+        with Connection() as handler:
+            column_list, columns = handler.get_column_names(tableName)
+            query, rows = handler.select("*", tableName, "")
+        w = self.rFrame.layout.takeAt(0)
+        w.widget().deleteLater()
+        self.table = Table(rows, column_list)
+        self.rFrame.layout.addWidget(self.table)
+        self.textBox.append(query)
+        self.textBox.append("---------------------------------------------------")
 
 class ScheduleAddForm(MainForm):
     """ A form window for the schedule table."""
