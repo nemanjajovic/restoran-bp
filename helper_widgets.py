@@ -57,12 +57,6 @@ class MainView(QWidget):
         layout.addWidget(frame)
         for widget in widgets:
             frame.layout.addWidget(widget)
-    
-    def get_column_string(self, list):
-        string = ""
-        for word in list[1:]:
-            string += word + ','
-        return string[:-1]
 
     def button_click(self):
         self.textBox.append(self.sender().text())
@@ -107,6 +101,7 @@ class MainForm(QMainWindow):
         super().__init__()
         # layout needs to be inside a widget to be displayed properly
         centralWidget = QWidget()
+        self.textBox = ""
 
         # ----------LAYOUT-----------
         self.layout = QGridLayout()
@@ -122,7 +117,9 @@ class MainForm(QMainWindow):
 
     def insert(self, table, columns, values):
         with Connection() as handler:
-            handler.insert(table, columns, values)
+            query, _ = handler.insert(table, columns, values)
+            self.textBox.append(query)
+            self.textBox.append("---------------------------------------------------")
 
     def update(self, table, column, new_val, id_column, id_val):
         with Connection() as handler:
@@ -163,11 +160,11 @@ class Table(QTableWidget):
         self.horizontalHeader().setMinimumSectionSize(col_width)
         self.setStyleSheet("QHeaderView {margin-left: 12px }")
 
-        self.populate_table()
+        self.populate_table(rows, columns)
 
-    def populate_table(self):
-        for i, row in enumerate(self.rows):
-            for j in range(len(self.columns)):
+    def populate_table(self, rows, col):
+        for i, row in enumerate(rows):
+            for j in range(len(col)):
                 item = QTableWidgetItem(str(row[j]))
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(i, j, item)
@@ -190,3 +187,9 @@ class Reservations():
             "9":  None,
             "10": None,
         }
+
+def get_column_string(list):
+    string = ""
+    for word in list[1:]:
+        string += word + ','
+    return string[:-1]
