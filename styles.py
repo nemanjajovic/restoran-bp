@@ -14,6 +14,7 @@ qss = """
         QFrame#frame2{max-height:100px;}
         QLineEdit{border: 2px solid green; border-radius: 4px;}
         QLineEdit::Hover{border: 2px solid white;}
+        QHeaderView {margin-left: 12px } 
         ApplicationPalette {
   qproperty-window: #2e2e2e;
   qproperty-windowtext: #eee;
@@ -1036,7 +1037,7 @@ TalkingUI > QFrame {
 
 search = """
     QWidget {
-      background-color: #333333;
+      background-color: #404040;
       color: #fffff8; 
       max-width:300px;
       }
