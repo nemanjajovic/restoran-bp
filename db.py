@@ -35,11 +35,11 @@ class DbHandler:
             for cell in row:
                 temp.append(cell)
             rows.append(temp)
-        return rows
+        return command, rows
 
     def insert(self, table, columns, values):
         command = f"INSERT INTO {table} ({columns}) VALUES ({values})"
-        return self.cursor.execute(command)
+        return command, self.cursor.execute(command)
 
     def update(self, table, column, new_val, id_column, id_val):
         command = f"UPDATE {table} SET {column} = '{new_val}' WHERE {id_column} = {id_val}"
