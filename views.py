@@ -9,24 +9,16 @@ from forms import *
 
 class MenuMainView(MainView):
     def __init__(self, tableName):
-        # column names
-        with Connection() as handler:
-            self.column_list, columns = handler.get_column_names(tableName)
-            query, self.rows = handler.select("*", tableName, "")
         super().__init__(tableName)
-        columns = get_column_string(self.column_list)
-
-        self.tableWidget = Table(self.rows, self.column_list)
-        #---------FORM-WINDOW-----------
-        # send rFrame to destroy table widget and make new
-        self.form = MenuForm(tableName, columns, self.rFrame)
-
         # ---------WIDGETS--------------
         self.search = QLineEdit()
         self.addItem = QPushButton("+ Add Item")
         self.allButton = QPushButton("SVE")
         self.drinksButton = QPushButton("PICE")
         self.foodbutton = QPushButton("HRANA")
+
+        columns = get_column_string(self.column_list)
+        self.form = MenuForm(tableName, columns, self.rFrame)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
@@ -38,9 +30,7 @@ class MenuMainView(MainView):
         self.fill_rlayout(self.tableWidget)
         
         self.addItem.clicked.connect(self.on_click)
-
-        self.textBox.append(query)
-        self.textBox.append("---------------------------------------------------")
+        self.drinksButton.pressed.connect(lambda: self.show_drinks(tableName))
 
     def on_click(self):
         self.form.textBox  = self.textBox
@@ -48,49 +38,45 @@ class MenuMainView(MainView):
         self.form.col_list = self.column_list
         self.form.show()
 
+    def show_drinks(self, tableName):
+        with Connection() as handler:
+            query, self.rows = handler.select("*", tableName, "artikal_tip = 'Pice'")
+        for row in self.rows:
+            print(row)
+
 
 class ScheduleMainView(MainView):
     def __init__(self, tableName):
-        with Connection() as handler:
-            column_list, columns = handler.get_column_names(tableName)
-        t =[ [None for i in range(len(column_list))]]
         super().__init__(tableName)
-        columns = get_column_string(column_list)
-        self.addForm = ScheduleAddForm(tableName,columns)
-
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
         self.addButton = QPushButton("Edit Raspored")
         self.weekButton = QPushButton("Pregled Sedmice")
 
-        #self.table = QtWidgets.QTableView()
-        #self.tableWidget = Table(rows, columns)
-        #self.tableWidget.populate_table()
+        columns = get_column_string(self.column_list)
+        self.addForm = ScheduleAddForm(tableName,columns)
 
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
         self.fill_llayout(self.calendar, self.addButton, self.weekButton, self.textBox)
-        #self.fill_rlayout(self.table)
+        self.fill_rlayout(self.tableWidget)
 
         self.addButton.clicked.connect(self.addForm.show)
 
 class ReservationMainView(MainView):
     def __init__(self, tableName):
-        with Connection() as handler:
-            column_list, columns = handler.get_column_names(tableName)
         super().__init__(tableName)
-        columns = get_column_string(column_list)
-        # override default (horizontal) MainView layout
+        # override default MainView frames
         self.tFrame = MyFrame(QVBoxLayout)
-        self.tFrame.setObjectName("frame2")
-        self.addForm = ReservationAddForm(tableName, columns)
-        
         self.rFrame = MyFrame(QGridLayout)
 
         # ---------WIDGETS--------------
         self.icon= QIcon("assets/freeTable.png")
+        columns = get_column_string(self.column_list)
+        self.addForm = ReservationAddForm(tableName, columns)
+
         self.buttons = []
         for i in range(20):
             self.buttons.append(QPushButton())
@@ -114,7 +100,8 @@ class ReservationMainView(MainView):
         self.freeLabel.setStyleSheet(qss)
         self.calendar.setStyleSheet(cal)
         self.slider.setRange(0, 10) # 20 ticks
-        self.rFrame.setObjectName(f"frame{1}")
+        self.rFrame.setObjectName("frame1")
+        self.tFrame.setObjectName("frame2")
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(QLabel(" "),self.calendar, self.textBox,self.freeLabel, self.reservedLabel, self.takenLabel)
@@ -145,24 +132,11 @@ class ReservationMainView(MainView):
 
 class ReceiptMainView(MainView):
     def __init__(self, tableName):
-        with Connection() as handler:
-            column_list, columns = handler.get_column_names(tableName)
-        t = [[None for i in range(len(column_list))]]
         super().__init__(tableName)
         # ---------WIDGETS--------------
         self.calendar = QCalendarWidget()
         self.search = QLineEdit()
         self.button = QPushButton("Simuliraj Narudzbe")
-
-        self.table = QtWidgets.QTableView()
-        self.tableWidget = QTableWidget(len(t),len(column_list))
-        self.tableWidget.setHorizontalHeaderLabels(column_list)
-        #self.tableWidget.horizontalHeaderItem().setTextAlignment(Qt.AlignHCenter)
-        # for i, row in enumerate(rows):
-        #     for j in range(len(column_list)):
-        #             self.tableWidget.setItem(i, j, QTableWidgetItem(str(row[j])))
-
-        self.tableWidget.verticalHeader().setVisible(False)
 
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
@@ -174,32 +148,24 @@ class ReceiptMainView(MainView):
         self.fill_rlayout(self.tableWidget)
     
 class WorkersMainView(MainView):
-    def __init__(self, tableName):
-        with Connection() as handler:
-            column_list, columns = handler.get_column_names(tableName)
-            query, rows = handler.select("*", tableName, "")        
+    def __init__(self, tableName): 
         super().__init__(tableName)
-        columns = get_column_string(column_list)
-        self.workerForm = WorkerAddForm(tableName, columns)
-
         # ---------WIDGETS--------------
         self.buttons = [QPushButton(label) for label in ["Svi","Servis","Kuhinja","Pomocni"]]
         self.addWorkerButton = QPushButton("+ Novi Radnik")
         self.search = QLineEdit()
 
-        self.tableWidget = Table(rows, column_list)
+        columns = get_column_string(self.column_list)
+        self.workerForm = WorkerAddForm(tableName, columns)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
-        #self.tableWidget.setStyleSheet("""QWidget {background-color: #333333;color: #fffff8; }""")
         self.addWorkerButton.setStyleSheet("QPushButton{max-width:120px;}")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.buttons[0],self.buttons[1],self.buttons[2],self.buttons[3], self.textBox)
+        self.fill_llayout(QLabel(" "),self.buttons[0],self.buttons[1],self.buttons[2], self.buttons[3],  QLabel(" "), self.textBox)
         self.fill_rtop(self.search, self.addWorkerButton)
         self.fill_rlayout(self.tableWidget)
 
         # --------BUTTON-ACTIONS--------
         self.addWorkerButton.clicked.connect(self.workerForm.show)
-
-        self.textBox.append(query)

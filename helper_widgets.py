@@ -8,11 +8,19 @@ from db import Connection
 class MainView(QWidget):
     """ A layout parent class for all views, takes one string
         argument which represents the name of the view."""
-    def __init__(self, viewName):
+
+    def __init__(self, tableName):
         super().__init__()
+
+        # first query to get all rows and query string
+        with Connection() as handler:
+            self.column_list, _ = handler.get_column_names(tableName)
+            self.query, self.rows = handler.select("*", tableName, "")
+
         # ----------WIDGETS----------
-        self.nameLabel = QLabel(viewName)
+        self.nameLabel = QLabel(tableName)
         self.textBox = QTextEdit()
+        self.tableWidget = Table(self.rows, self.column_list)
 
         # ----------LAYOUTS----------
         self.layout = QHBoxLayout()  # parent
@@ -41,6 +49,9 @@ class MainView(QWidget):
         # set frame names
         for i, frame in enumerate([self.lFrame, self.rFrame, self.tFrame]):
             frame.setObjectName(f"frame{i}")
+
+        self.textBox.append(self.query)
+        self.textBox.append(dash)
 
     def fill_llayout(self, *widgets):
         widgets = list(widgets)
