@@ -11,7 +11,7 @@ class MainView(QWidget):
 
     def __init__(self, tableName):
         super().__init__()
-
+        self.tableName = tableName
         # first query to get all rows and query string
         with Connection() as handler:
             self.column_list, _ = handler.get_column_names(tableName)
@@ -123,7 +123,7 @@ class MainForm(QMainWindow):
         centralWidget.setLayout(self.layout)
 
         # ----------STYLE------------
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        #self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Form")
         self.setFixedSize(640,320)
         self.setStyleSheet(qss)
