@@ -3,11 +3,7 @@ from PySide6.QtGui import QPalette, QColor
 from PySide6.QtCore import Qt
 
 dash = "---------------------------------------------------"
-qss1 = """
-    max-width:400px;
-    min-width:300px;
-    border :3px solid darkblue;
-"""
+
 qss = """
         QFrame#frame0, QFrame#frame1, QFrame#frame2{border: 4px solid rgb(35,35,35); border-radius: 6px;}
         QFrame#frame0::hover, QFrame#frame1::hover, QFrame#frame2::hover{border: 2px solid #61D0EF;}
