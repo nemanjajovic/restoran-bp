@@ -11,34 +11,28 @@ class MenuMainView(MainView):
         super().__init__(tableName)
         # ---------WIDGETS--------------
         self.search = QLineEdit()
-        self.addItem = QPushButton("+ Add Item")
-        self.allButton = QPushButton("SVE")
-        self.drinksButton = QPushButton("PICE")
-        self.foodbutton = QPushButton("HRANA")
+        addItem = QPushButton("+ Add Item")
+        allButton = QPushButton("SVE")
+        drinksButton = QPushButton("PICE")
+        foodButton = QPushButton("HRANA")
 
         columns = get_column_string(self.column_list)
         self.form = MenuForm(tableName, columns, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
-        self.addItem.setStyleSheet(add)
+        addItem.setStyleSheet(add)
         
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(QLabel(" "), self.allButton, self.drinksButton, self.foodbutton, QLabel(" "), self.textBox)
-        self.fill_rtop(self.search, self.addItem)
+        self.fill_llayout(QLabel(" "), allButton, drinksButton, foodButton, QLabel(" "), self.textBox)
+        self.fill_rtop(self.search, addItem)
         self.fill_rlayout(self.tableWidget)
         
-        self.addItem.clicked.connect(self.on_click)
-        self.drinksButton.pressed.connect(self.select_drinks)
-
-    def on_click(self):
-        self.form.textBox  = self.textBox
-        self.form.table = self.tableWidget
-        self.form.col_list = self.column_list
-        self.form.show()
-
-    def select_drinks(self):
-        self.form.show_drinks()
+        # ---------CONNECTIONS----------
+        addItem.clicked.connect(self.form.show)
+        allButton.pressed.connect(self.form.show_all)
+        drinksButton.pressed.connect(self.form.show_drinks)
+        foodButton.pressed.connect(self.form.show_food)
 
 class ScheduleMainView(MainView):
     def __init__(self, tableName):
@@ -146,21 +140,28 @@ class WorkersMainView(MainView):
     def __init__(self, tableName): 
         super().__init__(tableName)
         # ---------WIDGETS--------------
-        self.buttons = [QPushButton(label) for label in ["Svi","Servis","Kuhinja","Pomocni"]]
-        self.addWorkerButton = QPushButton("+ Novi Radnik")
+        allButton = QPushButton("Svi")
+        serviceButton = QPushButton("Servis")
+        kitchenButton = QPushButton("Kuhinja")
+        helperButton = QPushButton("Pomoćni")
+        addWorkerButton = QPushButton("+ Novi Radnik")
         self.search = QLineEdit()
 
         columns = get_column_string(self.column_list)
-        self.workerForm = WorkerAddForm(tableName, columns, self.textBox)
+        self.workerForm = WorkerAddForm(tableName, columns, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
-        self.addWorkerButton.setStyleSheet("QPushButton{max-width:120px;}")
+        addWorkerButton.setStyleSheet("QPushButton{max-width:120px;}")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(QLabel(" "),self.buttons[0],self.buttons[1],self.buttons[2], self.buttons[3],  QLabel(" "), self.textBox)
-        self.fill_rtop(self.search, self.addWorkerButton)
+        self.fill_llayout(QLabel(" "), allButton, serviceButton, kitchenButton, helperButton,  QLabel(" "), self.textBox)
+        self.fill_rtop(self.search, addWorkerButton)
         self.fill_rlayout(self.tableWidget)
 
-        # --------BUTTON-ACTIONS--------
-        self.addWorkerButton.clicked.connect(self.workerForm.show)
+        # --------CONNECTIONS-----------
+        addWorkerButton.clicked.connect(self.workerForm.show)
+        allButton.clicked.connect(self.workerForm.show_all)
+        serviceButton.clicked.connect(self.workerForm.show_service)
+        kitchenButton.clicked.connect(self.workerForm.show_kitchen)
+        helperButton.clicked.connect(self.workerForm.show_helpers)
