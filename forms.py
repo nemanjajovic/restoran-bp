@@ -68,12 +68,21 @@ class ScheduleAddForm(MainForm):
     def __init__(self, table, columns, calendar, frame, textBox):
         super().__init__(table, columns, textBox)
         self.rFrame = frame
+        _date = calendar.selectedDate().toString("dd-MM-yyyy")
+        self.date = calendar.selectedDate().toString("MM/dd/yyyy")
+        self.workers = self.available_workers()
+        self.ids = [row[0] for row in self.workers]
+
         # ---------WIDGETS---------
-        date = QLabel("Datum: " + calendar.selectedDate().toString("dd-MM-yyyy"))
-        self.worker = QLineEdit()
+        dateLabel = QLabel("Datum: " + _date)
         self.shift = QLineEdit()
         self.position = QLineEdit()
-        self.button = QPushButton("Confirm")
+        button = QPushButton("Confirm")
+
+        self.workerBox = QComboBox()
+        for row in self.workers:
+            # name + ' ' + surname
+            self.workerBox.addItem(row[1]+' '+ row[2]) 
 
         # labels
         lnames = [ "Radnik: ", "Pocetak Smjene: ", "Pozicija: "]
@@ -83,15 +92,46 @@ class ScheduleAddForm(MainForm):
             self.layout.addWidget(label, i+1, 0)
         
         # ---------LAYOUT---------
-        self.layout.addWidget(date, 0, 0)
-        self.layout.addWidget(self.worker, 1, 1)
+        self.layout.addWidget(dateLabel, 0, 0)
+        self.layout.addWidget(self.workerBox, 1, 1)
         self.layout.addWidget(self.shift, 2, 1)
         self.layout.addWidget(self.position, 3, 1)
-        self.layout.addWidget(self.button, 4, 1)
+        self.layout.addWidget(button, 4, 1)
 
         # ----------STYLES---------
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:20px;max-height:30px;}")
         self.setFixedSize(500,340)
+
+        button.clicked.connect(lambda: self.confirm(columns))
+
+    def available_workers(self):
+        rows = []
+        # radnik_id radnik_ime _radnik_prezime
+        _query = f"""SELECT rd.radnik_id,rd.radnik_ime,rd.radnik_prezime FROM Radnici rd
+                    LEFT JOIN Raspored ON rd.radnik_id= Raspored.radnik_id
+                    WHERE Raspored.radnik_id IS NULL"""
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            for row in handler.cursor.execute(_query):
+                rows.append(row)
+        self.update_textbox(_query)
+        return rows
+
+    def confirm(self, columns):
+        for row in self.workers:
+            _worker = self.workerBox.currentText().split()
+            if _worker[0] in row and _worker[1] in row:
+                _id = row[0]
+        # radnik_id raspored_datum pocetak_smjene radna_pozicija     
+        values = f"'{_id}','{self.date}','{self.shift.text()}','{self.position.text()}'"
+        print(columns)
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, _ = handler.insert(self.tableName, columns, values)
+            self.update_textbox(query)
+            query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
 
     def show_date(self, date):
         date = date.toString("yyyy-MM-dd")
