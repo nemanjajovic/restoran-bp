@@ -113,6 +113,7 @@ class MainForm(QMainWindow):
     """ A window parent class to all data entry/editing forms."""
     def __init__(self, table, columns, textBox):
         super().__init__()
+        self.tableName = table
         # layout needs to be inside a widget to be displayed properly
         centralWidget = QWidget()
         self.textBox = textBox
@@ -129,20 +130,27 @@ class MainForm(QMainWindow):
 
         self.setCentralWidget(centralWidget)
 
-    def insert(self, table, columns, values):
+    def insert(self, columns, values):
         with Connection() as handler:
-            query, _ = handler.insert(table, columns, values)
+            query, _ = handler.insert(self.tableName, columns, values)
             self.update_textbox(query)
 
-    def update(self, table, column, new_val, id_column, id_val):
+    def update(self, column, new_val, id_column, id_val):
         with Connection() as handler:
-            handler.update(table, column, new_val, id_column, id_val)
+            handler.update(self.tableName, column, new_val, id_column, id_val)
 
     def replace_table(self, rows, column_list):
         _widget = self.rFrame.layout.takeAt(0)
         _widget.widget().deleteLater()
         self.table = Table(rows, column_list)
         self.rFrame.layout.addWidget(self.table)
+
+    def show_all(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
 
     def update_textbox(self, query):
         self.textBox.append(query)
