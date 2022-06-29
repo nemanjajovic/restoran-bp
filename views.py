@@ -1,7 +1,6 @@
 from styles import *
 from helper_widgets import *
 from PySide6.QtWidgets import *
-from PySide6 import QtWidgets
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
 from db import Connection
@@ -18,7 +17,7 @@ class MenuMainView(MainView):
         self.foodbutton = QPushButton("HRANA")
 
         columns = get_column_string(self.column_list)
-        self.form = MenuForm(tableName, columns, self.rFrame)
+        self.form = MenuForm(tableName, columns, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
@@ -30,7 +29,7 @@ class MenuMainView(MainView):
         self.fill_rlayout(self.tableWidget)
         
         self.addItem.clicked.connect(self.on_click)
-        self.drinksButton.pressed.connect(lambda: self.show_drinks(tableName))
+        self.drinksButton.pressed.connect(self.select_drinks)
 
     def on_click(self):
         self.form.textBox  = self.textBox
@@ -38,12 +37,8 @@ class MenuMainView(MainView):
         self.form.col_list = self.column_list
         self.form.show()
 
-    def show_drinks(self, tableName):
-        with Connection() as handler:
-            query, self.rows = handler.select("*", tableName, "artikal_tip = 'Pice'")
-        for row in self.rows:
-            print(row)
-
+    def select_drinks(self):
+        self.form.show_drinks()
 
 class ScheduleMainView(MainView):
     def __init__(self, tableName):
@@ -54,7 +49,7 @@ class ScheduleMainView(MainView):
         self.weekButton = QPushButton("Pregled Sedmice")
 
         columns = get_column_string(self.column_list)
-        self.addForm = ScheduleAddForm(tableName,columns)
+        self.addForm = ScheduleAddForm(tableName,columns, self.textBox)
 
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
@@ -75,7 +70,7 @@ class ReservationMainView(MainView):
         # ---------WIDGETS--------------
         self.icon= QIcon("assets/freeTable.png")
         columns = get_column_string(self.column_list)
-        self.addForm = ReservationAddForm(tableName, columns)
+        self.addForm = ReservationAddForm(tableName, columns, self.textBox)
 
         self.buttons = []
         for i in range(20):
@@ -156,7 +151,7 @@ class WorkersMainView(MainView):
         self.search = QLineEdit()
 
         columns = get_column_string(self.column_list)
-        self.workerForm = WorkerAddForm(tableName, columns)
+        self.workerForm = WorkerAddForm(tableName, columns, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
