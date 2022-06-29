@@ -42,26 +42,29 @@ class ScheduleMainView(MainView):
     def __init__(self, tableName):
         super().__init__(tableName)
         # ---------WIDGETS--------------
-        calendar = QCalendarWidget()
+        self.calendar = QCalendarWidget()
         addButton = QPushButton("+ Dodaj")
         self.weekButton = QPushButton("Pregled Sedmice")
 
-        columns = get_column_string(self.column_list)
-        self.form = ScheduleAddForm(tableName, columns, calendar, self.rFrame, self.textBox)
+        self.columns = get_column_string(self.column_list)
+        self.form = ScheduleAddForm(tableName, self.columns, self.calendar, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
-        calendar.setStyleSheet(cal)
+        self.calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
-        self.fill_llayout(calendar, addButton, self.weekButton, self.textBox)
+        self.fill_llayout(self.calendar, addButton, self.weekButton, self.textBox)
         self.fill_rlayout(self.tableWidget)
 
-        addButton.clicked.connect(lambda: self.show(columns, calendar))
-        calendar.clicked.connect(self.form.show_date)
+        addButton.clicked.connect(self.show)
+        self.calendar.clicked.connect(self.select_date)
 
-    def show(self, columns, calendar):
-        self.form = ScheduleAddForm(self.tableName, columns, calendar, self.rFrame, self.textBox)
+    def show(self):
         self.form.show()
+
+    def select_date(self, date):
+        self.form.show_date(date)
+        self.form = ScheduleAddForm(self.tableName, self.columns, self.calendar, self.rFrame, self.textBox)
 
 class ReservationMainView(MainView):
     def __init__(self, tableName):
