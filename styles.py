@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QPalette, QColor
 from PySide6.QtCore import Qt
 
+dash = "---------------------------------------------------"
 qss1 = """
     max-width:400px;
     min-width:300px;
