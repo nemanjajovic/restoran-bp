@@ -17,7 +17,7 @@ class MenuMainView(MainView):
         foodButton = QPushButton("HRANA")
 
         columns = get_column_string(self.column_list)
-        self.form = MenuForm(tableName, columns, self.rFrame, self.textBox)
+        self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
@@ -29,31 +29,39 @@ class MenuMainView(MainView):
         self.fill_rlayout(self.tableWidget)
         
         # ---------CONNECTIONS----------
-        addItem.clicked.connect(self.form.show)
+        addItem.clicked.connect(lambda: self.show(columns))
         allButton.pressed.connect(self.form.show_all)
         drinksButton.pressed.connect(self.form.show_drinks)
         foodButton.pressed.connect(self.form.show_food)
+
+    def show(self, columns):
+        self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
+        self.form.show()
 
 class ScheduleMainView(MainView):
     def __init__(self, tableName):
         super().__init__(tableName)
         # ---------WIDGETS--------------
         calendar = QCalendarWidget()
-        self.addButton = QPushButton("Edit Raspored")
+        addButton = QPushButton("+ Dodaj")
         self.weekButton = QPushButton("Pregled Sedmice")
 
         columns = get_column_string(self.column_list)
-        self.addForm = ScheduleAddForm(tableName,columns, self.textBox)
+        self.form = ScheduleAddForm(tableName, columns, calendar, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
-        self.fill_llayout(calendar, self.addButton, self.weekButton, self.textBox)
+        self.fill_llayout(calendar, addButton, self.weekButton, self.textBox)
         self.fill_rlayout(self.tableWidget)
 
-        self.addButton.clicked.connect(self.addForm.show)
+        addButton.clicked.connect(lambda: self.show(columns, calendar))
+        calendar.clicked.connect(self.form.show_date)
 
+    def show(self, columns, calendar):
+        self.form = ScheduleAddForm(self.tableName, columns, calendar, self.rFrame, self.textBox)
+        self.form.show()
 
 class ReservationMainView(MainView):
     def __init__(self, tableName):
@@ -156,7 +164,7 @@ class WorkersMainView(MainView):
         self.search = QLineEdit()
 
         columns = get_column_string(self.column_list)
-        self.workerForm = WorkerAddForm(tableName, columns, self.rFrame, self.textBox)
+        self.form = WorkerAddForm(tableName, columns, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
@@ -168,8 +176,12 @@ class WorkersMainView(MainView):
         self.fill_rlayout(self.tableWidget)
 
         # --------CONNECTIONS-----------
-        addWorkerButton.clicked.connect(self.workerForm.show)
-        allButton.clicked.connect(self.workerForm.show_all)
-        serviceButton.clicked.connect(self.workerForm.show_service)
-        kitchenButton.clicked.connect(self.workerForm.show_kitchen)
-        helperButton.clicked.connect(self.workerForm.show_helpers)
+        addWorkerButton.clicked.connect(lambda: self.show(columns))
+        allButton.clicked.connect(self.form.show_all)
+        serviceButton.clicked.connect(self.form.show_service)
+        kitchenButton.clicked.connect(self.form.show_kitchen)
+        helperButton.clicked.connect(self.form.show_helpers)
+
+    def show(self, columns):
+        self.form = WorkerAddForm(self.tableName, columns, self.rFrame, self.textBox)
+        self.form.show()
