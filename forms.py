@@ -8,7 +8,6 @@ class MenuForm(MainForm):
     """ A form window for the menu table."""
     def __init__(self, tableName, columns, frame, textBox):
         super().__init__(tableName, columns, textBox)
-        self.tableName = tableName
         # ---------WIDGETS---------
         self.name = QLineEdit()
         self.type = QComboBox()
@@ -66,33 +65,41 @@ class MenuForm(MainForm):
 
 class ScheduleAddForm(MainForm):
     """ A form window for the schedule table."""
-    def __init__(self, table, columns, textBox):
+    def __init__(self, table, columns, calendar, frame, textBox):
         super().__init__(table, columns, textBox)
+        self.rFrame = frame
         # ---------WIDGETS---------
-        self.date = QLineEdit()
+        date = QLabel("Datum: " + calendar.selectedDate().toString("dd-MM-yyyy"))
         self.worker = QLineEdit()
         self.shift = QLineEdit()
         self.position = QLineEdit()
         self.button = QPushButton("Confirm")
 
         # labels
-        lnames = ["Datum: ", "Radnik: ", "Pocetak Smjene: ", "Pozicija: "]
+        lnames = [ "Radnik: ", "Pocetak Smjene: ", "Pozicija: "]
         for i,text in enumerate(lnames):
             label = QLabel(text)
             label.setAlignment(Qt.AlignRight)
-            self.layout.addWidget(label, i, 0)
+            self.layout.addWidget(label, i+1, 0)
         
         # ---------LAYOUT---------
-        self.layout.addWidget(self.date, 0, 1)
+        self.layout.addWidget(date, 0, 0)
         self.layout.addWidget(self.worker, 1, 1)
         self.layout.addWidget(self.shift, 2, 1)
         self.layout.addWidget(self.position, 3, 1)
         self.layout.addWidget(self.button, 4, 1)
 
         # ----------STYLES---------
-        self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:20px;}")
+        self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:20px;max-height:30px;}")
         self.setFixedSize(500,340)
 
+    def show_date(self, date):
+        date = date.toString("yyyy-MM-dd")
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, f"raspored_datum='{date}'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
         
 
 class ScheduleWeekForm(MainForm):
