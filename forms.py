@@ -6,8 +6,9 @@ from helper_widgets import MainForm, Table, get_column_string
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
-    def __init__(self, tableName, columns, frame):
-        super().__init__(tableName, columns)
+    def __init__(self, tableName, columns, frame, textBox):
+        super().__init__(tableName, columns, textBox)
+        self.tableName = tableName
         # ---------WIDGETS---------
         self.name = QLineEdit()
         self.type = QComboBox()
@@ -38,25 +39,28 @@ class MenuForm(MainForm):
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
         self.setFixedSize(500,340)
 
-        self.button.pressed.connect(lambda: self.confirm(tableName, columns))
+        self.button.pressed.connect(lambda: self.confirm(columns))
 
-    def confirm(self,tableName,columns):     
+    def confirm(self,columns):     
         values = f"'{self.name.text()}','{self.type.currentText()}','{self.category.text()}','{self.price.text()}'"
-        self.insert(tableName, columns, values)
+        self.insert(self.tableName, columns, values)
         with Connection() as handler:
-            column_list, columns = handler.get_column_names(tableName)
-            query, rows = handler.select("*", tableName, "")
-        w = self.rFrame.layout.takeAt(0)
-        w.widget().deleteLater()
-        self.table = Table(rows, column_list)
-        self.rFrame.layout.addWidget(self.table)
-        self.textBox.append(query)
-        self.textBox.append("---------------------------------------------------")
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
+    def show_drinks(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "artikal_tip = 'Pice'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
 
 class ScheduleAddForm(MainForm):
     """ A form window for the schedule table."""
-    def __init__(self, table, columns):
-        super().__init__(table, columns)
+    def __init__(self, table, columns, textBox):
+        super().__init__(table, columns, textBox)
         # ---------WIDGETS---------
         self.date = QLineEdit()
         self.worker = QLineEdit()
@@ -88,8 +92,8 @@ class ScheduleWeekForm(MainForm):
 
 class ReservationAddForm(MainForm):
     """ A form window for the reservations table."""
-    def __init__(self, table, columns):
-        super().__init__(table, columns)
+    def __init__(self, table, columns, textBox):
+        super().__init__(table, columns, textBox)
         # ---------WIDGETS---------
         self.nr_of_guests = QLineEdit()
         self.time   = QLineEdit()
@@ -127,8 +131,8 @@ class ReservationAddForm(MainForm):
 class WorkerAddForm(MainForm):
     """ A form window for the workers table."""
     tipovi = ["Servis", "Kuhinja", "Pomocni"]
-    def __init__(self, table, columns):
-        super().__init__(table, columns)
+    def __init__(self, table, columns, textBox):
+        super().__init__(table, columns, textBox)
         # ----------WIDGETS----------
         self.name   = QLineEdit()
         self.surname= QLineEdit()

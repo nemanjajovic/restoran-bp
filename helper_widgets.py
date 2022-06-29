@@ -50,8 +50,7 @@ class MainView(QWidget):
         for i, frame in enumerate([self.lFrame, self.rFrame, self.tFrame]):
             frame.setObjectName(f"frame{i}")
 
-        self.textBox.append(self.query)
-        self.textBox.append(dash)
+        self.update_textbox(self.query)
 
     def fill_llayout(self, *widgets):
         widgets = list(widgets)
@@ -68,6 +67,10 @@ class MainView(QWidget):
         layout.addWidget(frame)
         for widget in widgets:
             frame.layout.addWidget(widget)
+
+    def update_textbox(self, query):
+        self.textBox.append(query)
+        self.textBox.append(dash)
 
     def button_click(self):
         self.textBox.append(self.sender().text())
@@ -108,11 +111,11 @@ class SliderLabel(QWidget):
 
 class MainForm(QMainWindow):
     """ A window parent class to all data entry/editing forms."""
-    def __init__(self, table, columns):
+    def __init__(self, table, columns, textBox):
         super().__init__()
         # layout needs to be inside a widget to be displayed properly
         centralWidget = QWidget()
-        self.textBox = ""
+        self.textBox = textBox
 
         # ----------LAYOUT-----------
         self.layout = QGridLayout()
@@ -129,12 +132,21 @@ class MainForm(QMainWindow):
     def insert(self, table, columns, values):
         with Connection() as handler:
             query, _ = handler.insert(table, columns, values)
-            self.textBox.append(query)
-            self.textBox.append("---------------------------------------------------")
+            self.update_textbox(query)
 
     def update(self, table, column, new_val, id_column, id_val):
         with Connection() as handler:
             handler.update(table, column, new_val, id_column, id_val)
+
+    def replace_table(self, rows, column_list):
+        _widget = self.rFrame.layout.takeAt(0)
+        _widget.widget().deleteLater()
+        self.table = Table(rows, column_list)
+        self.rFrame.layout.addWidget(self.table)
+
+    def update_textbox(self, query):
+        self.textBox.append(query)
+        self.textBox.append(dash)
 
 class IconLabel(QWidget):
     """A class combining an icon and text."""
