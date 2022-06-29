@@ -50,10 +50,24 @@ class MenuForm(MainForm):
         self.replace_table(rows, column_list)
         self.update_textbox(query)
 
+    def show_all(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
     def show_drinks(self):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "artikal_tip = 'Pice'")
+            query, rows = handler.select("*", self.tableName, "artikal_tip='Pice'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
+    def show_food(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "artikal_tip='Hrana'")
         self.replace_table(rows, column_list)
         self.update_textbox(query)
 
@@ -130,17 +144,19 @@ class ReservationAddForm(MainForm):
 
 class WorkerAddForm(MainForm):
     """ A form window for the workers table."""
-    tipovi = ["Servis", "Kuhinja", "Pomocni"]
-    def __init__(self, table, columns, textBox):
-        super().__init__(table, columns, textBox)
+
+    def __init__(self, tableName, columns, frame, textBox):
+        super().__init__(tableName, columns, textBox)
+        self.tableName = tableName
         # ----------WIDGETS----------
+        self.rFrame = frame
         self.name   = QLineEdit()
         self.surname= QLineEdit()
         self.button = QPushButton("Confirm")
 
         # ComboBox
         self.type= QComboBox()
-        for elem in self.tipovi:
+        for elem in ["Servis", "Kuhinja", "Pomocni"]:
             self.type.addItem(elem)
 
         # labels
@@ -161,11 +177,39 @@ class WorkerAddForm(MainForm):
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:100px;}QLineEdit{max-width:300px;margin-right:30px;}QLabel{font-size:20px;margin-left:20px;}")
         self.setFixedSize(500,340)
 
-        self.button.pressed.connect(lambda:self.confirm(table,columns))
+        self.button.pressed.connect(lambda:self.confirm(columns))
 
-    def confirm(self,table,columns):     
+    def confirm(self, columns):     
         values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
-        self.insert(table, columns, values)
+        self.insert(self.tableName, columns, values)
+
+    def show_all(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
+    def show_service(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "radnik_tip='Servis'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
+    def show_kitchen(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "radnik_tip='Kuhinja'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+    
+    def show_helpers(self):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "radnik_tip='Pomocni'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
 
 class TableForm(MainForm):
     """ A form window for the individual restaurant tables."""
