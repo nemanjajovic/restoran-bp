@@ -50,13 +50,6 @@ class MenuForm(MainForm):
         self.replace_table(rows, column_list)
         self.update_textbox(query)
 
-    def show_all(self):
-        with Connection() as handler:
-            column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "")
-        self.replace_table(rows, column_list)
-        self.update_textbox(query)
-
     def show_drinks(self):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
@@ -100,6 +93,8 @@ class ScheduleAddForm(MainForm):
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:20px;}")
         self.setFixedSize(500,340)
 
+        
+
 class ScheduleWeekForm(MainForm):
     def __init__(self):
         super().__init__()
@@ -142,6 +137,20 @@ class ReservationAddForm(MainForm):
         with Connection() as handler:
             handler.insert("Radnici", "radnik_naziv,radnik_tip,radnik_sati", values)    
 
+class ReceiptForm(MainForm):
+    
+    def __init__(self, tableName, columns, frame, textBox):
+        super().__init__(tableName, columns, textBox)
+        self.rFrame = frame
+
+    def show_date(self, date):
+        date = date.toString("yyyy-MM-dd")
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, f"racun_datum='{date}'")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
 class WorkerAddForm(MainForm):
     """ A form window for the workers table."""
 
@@ -182,13 +191,6 @@ class WorkerAddForm(MainForm):
     def confirm(self, columns):     
         values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
         self.insert(self.tableName, columns, values)
-
-    def show_all(self):
-        with Connection() as handler:
-            column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "")
-        self.replace_table(rows, column_list)
-        self.update_textbox(query)
 
     def show_service(self):
         with Connection() as handler:

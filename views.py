@@ -38,7 +38,7 @@ class ScheduleMainView(MainView):
     def __init__(self, tableName):
         super().__init__(tableName)
         # ---------WIDGETS--------------
-        self.calendar = QCalendarWidget()
+        calendar = QCalendarWidget()
         self.addButton = QPushButton("Edit Raspored")
         self.weekButton = QPushButton("Pregled Sedmice")
 
@@ -46,13 +46,14 @@ class ScheduleMainView(MainView):
         self.addForm = ScheduleAddForm(tableName,columns, self.textBox)
 
         # ---------STYLES---------------
-        self.calendar.setStyleSheet(cal)
+        calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
-        self.fill_llayout(self.calendar, self.addButton, self.weekButton, self.textBox)
+        self.fill_llayout(calendar, self.addButton, self.weekButton, self.textBox)
         self.fill_rlayout(self.tableWidget)
 
         self.addButton.clicked.connect(self.addForm.show)
+
 
 class ReservationMainView(MainView):
     def __init__(self, tableName):
@@ -123,18 +124,25 @@ class ReceiptMainView(MainView):
     def __init__(self, tableName):
         super().__init__(tableName)
         # ---------WIDGETS--------------
-        self.calendar = QCalendarWidget()
+        allButton = QPushButton("Prikaži Sve")
+        calendar = QCalendarWidget()
         self.search = QLineEdit()
         self.button = QPushButton("Simuliraj Narudzbe")
 
+        columns = get_column_string(self.column_list)
+        self.form = ReceiptForm(tableName, columns, self.rFrame, self.textBox)
+
         # ---------STYLES---------------
-        self.calendar.setStyleSheet(cal)
+        calendar.setStyleSheet(cal)
         self.search.setStyleSheet(search)
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(self.calendar, self.button, self.textBox)
+        self.fill_llayout(calendar, allButton, self.button, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.tableWidget)
+
+        allButton.pressed.connect(self.form.show_all)
+        calendar.clicked.connect(self.form.show_date)
     
 class WorkersMainView(MainView):
     def __init__(self, tableName): 
