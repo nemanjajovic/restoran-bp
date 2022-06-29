@@ -71,7 +71,7 @@ class ReservationMainView(MainView):
         self.rFrame = MyFrame(QGridLayout)
 
         # ---------WIDGETS--------------
-        self.icon= QIcon("assets/freeTable.png")
+        self.icon= QIcon("assets/icons/freeTable.png")
         columns = get_column_string(self.column_list)
         self.addForm = ReservationAddForm(tableName, columns, self.textBox)
 
@@ -89,9 +89,9 @@ class ReservationMainView(MainView):
         self.calendar = QCalendarWidget()
         sliderLbl = SliderLabel()
         self.slider = QSlider(Qt.Horizontal)
-        self.freeLabel = IconLabel("assets/freeTable.png", "-  Slobodno")
-        self.reservedLabel = IconLabel("assets/reservedTable.png", "-  Rezervisano")
-        self.takenLabel = IconLabel("assets/takenTable.png", "-  Zauzeto")
+        self.freeLabel = IconLabel("assets/icons/freeTable.png", "-  Slobodno")
+        self.reservedLabel = IconLabel("assets/icons/reservedTable.png", "-  Rezervisano")
+        self.takenLabel = IconLabel("assets/icons/takenTable.png", "-  Zauzeto")
 
         # ---------STYLES---------------
         self.filler.setStyleSheet("QLabel{max-width:40px;max-height:40px;}")
