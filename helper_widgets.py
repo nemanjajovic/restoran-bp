@@ -1,7 +1,7 @@
 import pandas as pd
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
-from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtGui import QPixmap, QIcon, QMouseEvent
 from styles import *
 from db import Connection
 
@@ -20,7 +20,7 @@ class MainView(QWidget):
         # ----------WIDGETS----------
         self.nameLabel = QLabel(tableName)
         self.textBox = QTextEdit()
-        self.tableWidget = Table(self.rows, self.column_list)
+        self.tableWidget = Table(tableName, self.rows, self.column_list, self.textBox)
 
         # ----------LAYOUTS----------
         self.layout = QHBoxLayout()  # parent
@@ -111,9 +111,9 @@ class SliderLabel(QWidget):
 
 class MainForm(QMainWindow):
     """ A window parent class to all data entry/editing forms."""
-    def __init__(self, table, columns, textBox):
+    def __init__(self, tableName, columns, textBox):
         super().__init__()
-        self.tableName = table
+        self.tableName = tableName
         # layout needs to be inside a widget to be displayed properly
         centralWidget = QWidget()
         self.textBox = textBox
@@ -178,10 +178,12 @@ class IconLabel(QWidget):
             layout.addStretch()
 
 class Table(QTableWidget):
-    def __init__(self, rows, columns):
+    def __init__(self, name, rows, columns, textBox):
         super().__init__(len(rows),len(columns))
         self.rows = rows
         self.columns = columns
+        self.name = name
+        self.textBox = textBox
         # (program width - left frame) / nr of col
         col_width = int(865/len(columns))
 
@@ -200,6 +202,72 @@ class Table(QTableWidget):
                 item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(i, j, item)
 
+    def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
+        super().mouseDoubleClickEvent(event)
+        index = self.indexAt(event.pos())
+        if index.isValid():
+            self.show_table_form(index.row())
+
+    def show_table_form(self, row):
+        with Connection() as handler:
+            column_list , columns = handler.get_column_names(self.name)
+        self.tableForm = TableInfoForm(self, row, column_list, columns, self.textBox)
+        self.tableForm.show()
+
+class TableInfoForm(MainForm):
+    """ An info form window for the individual restaurant tables."""
+
+    def __init__(self, table, row, column_list, columns, textBox):
+        super().__init__(table, columns, textBox)
+
+        self.init_values = []
+
+        # ---------WIDGETS----------
+        label_list = [QLabel(text) for text in column_list]
+        self.le_list = [QLineEdit() for col in column_list]
+        test = QPushButton("Sačuvaj")
+        
+        # ----------LAYOUT----------
+        for i, l in enumerate(label_list):
+            cell_str = table.item(row, i).text()
+            self.init_values.append(cell_str)
+            self.le_list[i].insert(cell_str)
+            self.le_list[i].setModified(False)
+            self.layout.addWidget(l, i, 0)
+            self.layout.addWidget(self.le_list[i], i, 1)
+
+        self.layout.addWidget(test,len(self.le_list),1)
+
+        # ----------STYLE-----------
+        self.setStyleSheet("QLabel{font-size:16px}")
+        self.setFixedSize(500,340)
+        self.le_list[0].setReadOnly(True)
+
+        test.clicked.connect(lambda: self.save_changes())
+
+    def closeEvent(self, event):
+        can_exit = self.data_not_changed()
+        while not can_exit:
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Promjene")
+            dlg.setText("Sačuvaj promjene?")
+            dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            dlg.setIcon(QMessageBox.Question)
+            button = dlg.exec()
+            
+            if button == QMessageBox.Yes:
+                self.save_changes()
+                can_exit = True
+            else:
+                can_exit = True
+
+    def data_not_changed(self):
+        current_values = [self.le_list[i].text() for i in range(len(self.le_list))]
+        return self.init_values == current_values
+
+    def save_changes(self):
+        # TODO: update database on changed row
+        pass
 
 class Reservations():
     def __init__(self):
