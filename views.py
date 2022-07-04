@@ -56,6 +56,7 @@ class ScheduleMainView(MainView):
         self.fill_llayout(self.calendar, addButton, self.weekButton, self.textBox)
         self.fill_rlayout(self.tableWidget)
 
+        # ----------CONNECTIONS----------
         addButton.clicked.connect(self.show)
         self.calendar.clicked.connect(self.select_date)
 
@@ -85,7 +86,7 @@ class ReservationMainView(MainView):
             butt.setIcon(self.icon)
             butt.setFixedSize(QSize(100,100))
             butt.setIconSize(QSize(120,120))
-            butt.pressed.connect(lambda i=i+1: self.test(i))
+            butt.pressed.connect(lambda i=i+1: self.tableWidget.show_table_form(i))
             
         self.addButton = QPushButton("+ Reservation")
         self.filler = QLabel()
@@ -112,11 +113,6 @@ class ReservationMainView(MainView):
         self.fill_grid()
 
         self.addButton.clicked.connect(self.addForm.show)
-
-    def test(self, number):
-        self.tableForm = TableForm()
-        self.tableForm.name_label.setText(str(number))
-        self.tableForm.show()
 
     def fill_grid(self):
         index = 0
