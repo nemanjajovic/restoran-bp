@@ -2,7 +2,7 @@ from PySide6.QtWidgets import *
 from PySide6 import QtWidgets
 from styles import *
 from db import Connection
-from helper_widgets import MainForm, Table, get_column_string
+from helper_widgets import MainForm, get_column_string
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
@@ -106,10 +106,7 @@ class ScheduleAddForm(MainForm):
 
     def available_workers(self):
         rows = []
-        # radnik_id radnik_ime _radnik_prezime
-        _query = f"""SELECT rd.radnik_id,rd.radnik_ime,rd.radnik_prezime FROM Radnici rd
-                    LEFT JOIN Raspored ON rd.radnik_id= Raspored.radnik_id
-                    WHERE Raspored.radnik_id IS NULL"""
+        _query = f"""SELECT rd.radnik_id,rd.radnik_ime,rd.radnik_prezime FROM Radnici rd LEFT JOIN Raspored ON rd.radnik_id= Raspored.radnik_id WHERE Raspored.radnik_id IS NULL"""
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             for row in handler.cursor.execute(_query):
@@ -118,20 +115,27 @@ class ScheduleAddForm(MainForm):
         return rows
 
     def confirm(self, columns):
-        for row in self.workers:
-            _worker = self.workerBox.currentText().split()
-            if _worker[0] in row and _worker[1] in row:
-                _id = row[0]
-        # radnik_id raspored_datum pocetak_smjene radna_pozicija     
+        _id = self.get_selected_id()   
         values = f"'{_id}','{self.date}','{self.shift.text()}','{self.position.text()}'"
-        print(columns)
+        column_list = self.insert_worker(columns, values)
+        query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list)
+        self.update_textbox(query)
+
+    def insert_worker(self, columns, values):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, _ = handler.insert(self.tableName, columns, values)
             self.update_textbox(query)
-            query, rows = handler.select("*", self.tableName, "")
-        self.replace_table(rows, column_list)
-        self.update_textbox(query)
+        return column_list
+
+    def get_selected_id(self):
+        # "ime prezime" -> ["ime", "prezime"]
+        selected = self.workerBox.currentText().split()
+        for worker in self.workers:
+            # worker is tuple, ex. (3, "ime", "prezime")
+            if selected[0] in worker and selected[1] in worker:
+                return row[0]
 
     def show_date(self, date):
         date = date.toString("yyyy-MM-dd")
@@ -259,18 +263,3 @@ class WorkerAddForm(MainForm):
             query, rows = handler.select("*", self.tableName, "radnik_tip='Pomocni'")
         self.replace_table(rows, column_list)
         self.update_textbox(query)
-
-class TableForm(MainForm):
-    """ A form window for the individual restaurant tables."""
-    def __init__(self):
-        super().__init__()
-
-        label = QLabel("")
-        label.setAlignment(Qt.AlignRight)
-        label.setStyleSheet("QLabel{font-size:30px}")
-        self.layout.addWidget(label, 0, 0)
-
-        self.name_label = QLabel()
-        self.layout.addWidget(self.name_label, 0, 1)
-        self.name_label.setStyleSheet("QLabel{font-size:30px}")
-        self.setFixedSize(500,340)
