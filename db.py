@@ -27,14 +27,14 @@ class DbHandler:
         self.cursor = self.conn.cursor()
 
     def select(self, columns, table, condition):
-        rows = []
         cond = f"WHERE {condition}" if condition else ""
         command = f"""SELECT {columns} FROM {table} {cond};"""
-        for row in self.cursor.execute(command):
-            temp = []
-            for cell in row:
-                temp.append(cell)
-            rows.append(temp)
+        rows = self.get_row_list(command)
+        return command, rows
+    
+    def order_by(self, table, column):
+        command = f"""SELECT * FROM {table} ORDER BY {column};"""
+        rows = self.get_row_list(command)
         return command, rows
 
     def insert(self, table, columns, values):
@@ -60,3 +60,12 @@ class DbHandler:
             columns += row[3] + ',' # third elem is name
             column_list.append(row[3])
         return column_list, columns[:-1] 
+
+    def get_row_list(self, cmd):
+        rows = []
+        for row in self.cursor.execute(cmd):
+            temp = []
+            for cell in row:
+                temp.append(cell)
+            rows.append(temp)
+        return rows
