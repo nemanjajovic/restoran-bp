@@ -109,7 +109,8 @@ class SliderLabel(QWidget):
             hbox.addWidget(label)
 
 class MainForm(QMainWindow):
-    """ A window parent class to all data entry/editing forms."""
+    """ A window parent class to all data entry/editing forms, used also as a
+        database interface."""
     def __init__(self, tableName, columns, textBox):
         super().__init__()
         self.tableName = tableName
@@ -138,18 +139,18 @@ class MainForm(QMainWindow):
         with Connection() as handler:
             handler.update(self.tableName, column, new_val, id_column, id_val)
 
-    def replace_table(self, rows, column_list):
-        _widget = self.rFrame.layout.takeAt(0)
-        _widget.widget().deleteLater()
-        self.table = Table(rows, column_list)
-        self.rFrame.layout.addWidget(self.table)
-
     def show_all(self):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, "")
         self.replace_table(rows, column_list)
         self.update_textbox(query)
+
+    def replace_table(self, rows, column_list):
+        _widget = self.rFrame.layout.takeAt(0)
+        _widget.widget().deleteLater()
+        self.table = Table(self.tableName, rows, column_list, self.textBox)
+        self.rFrame.layout.addWidget(self.table)
 
     def update_textbox(self, query):
         self.textBox.append(query)
@@ -179,9 +180,8 @@ class IconLabel(QWidget):
 class Table(QTableWidget):
     def __init__(self, name, rows, columns, textBox):
         super().__init__(len(rows),len(columns))
-        self.rows = rows
-        self.columns = columns
-        self.name = name
+        self.column_dict = {}
+        self.tableName = name
         self.textBox = textBox
         # (program width - left frame) / nr of col
         col_width = int(865/len(columns))
@@ -192,7 +192,15 @@ class Table(QTableWidget):
         self.horizontalHeader().setMinimumSectionSize(col_width)
         self.setStyleSheet("QHeaderView {margin-left: 12px }")
 
+        self.horizontalHeader().sectionClicked.connect(self.headerOnClick)
+        
+        self.init_dict(columns)
         self.populate_table(rows, columns)
+    
+    def init_dict(self, columns):
+        for i, _ in enumerate(columns):
+            self.column_dict[i] = "ASC"
+        self.column_dict[0] = "DESC"
 
     def populate_table(self, rows, col):
         for i, row in enumerate(rows):
@@ -209,9 +217,24 @@ class Table(QTableWidget):
 
     def show_table_form(self, row):
         with Connection() as handler:
-            column_list , columns = handler.get_column_names(self.name)
+            column_list , columns = handler.get_column_names(self.tableName)
         self.tableForm = TableInfoForm(self, row, column_list, columns, self.textBox)
         self.tableForm.show()
+
+    def headerOnClick(self, i):
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.order_by(self.tableName, f"{column_list[i]} {self.column_dict[i]}")
+        self.switch_order(i)
+        self.populate_table(rows, column_list)
+        self.textBox.append(query)
+        self.textBox.append(dash)
+
+    def switch_order(self, i):
+        if self.column_dict[i] == "ASC":
+            self.column_dict[i] = "DESC"
+        else:
+            self.column_dict[i] = "ASC"
 
 class TableInfoForm(MainForm):
     """ An info form window for the individual restaurant tables."""
