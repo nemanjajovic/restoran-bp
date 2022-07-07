@@ -52,7 +52,7 @@ class MenuForm(MainForm):
         self.update_textbox(query)
 
     def search(self, text):
-        cond = f"artikal_naziv = '{text}' or artikal_kategorija = '{text}' {self.lastClicked}" if text else ""
+        cond = f"artikal_naziv LIKE '{text}%' {self.lastClicked}" if text else ""
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)
@@ -63,15 +63,7 @@ class MenuForm(MainForm):
         self.lastClicked = ""
         self.show_all()
 
-    def show_drinks(self, cond):
-        with Connection() as handler:
-            column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, cond)
-        self.replace_table(rows, column_list, cond)
-        self.update_textbox(query)
-        self.lastClicked = f"AND {cond}"
-
-    def show_food(self, cond):
+    def show(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)
@@ -218,12 +210,14 @@ class ReceiptForm(MainForm):
         self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
-class WorkerAddForm(MainForm):
+class WorkerForm(MainForm):
     """ A form window for the workers table."""
 
     def __init__(self, tableName, columns, frame, textBox):
         super().__init__(tableName, columns, textBox)
         self.tableName = tableName
+        self.lastClicked = ""
+
         # ----------WIDGETS----------
         self.rFrame = frame
         self.name   = QLineEdit()
@@ -259,23 +253,22 @@ class WorkerAddForm(MainForm):
         values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
         self.insert(self.tableName, columns, values)
 
-    def show_service(self, cond):
+    def worker_show_all(self):
+        self.lastClicked = ""
+        self.show_all()
+
+    def search(self, text):
+        cond = f"(radnik_ime LIKE '{text}%' OR radnik_prezime LIKE '{text}%') {self.lastClicked}" if text else ""
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)
         self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
 
-    def show_kitchen(self, cond):
+    def show(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)
         self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
-    
-    def show_helpers(self, cond):
-        with Connection() as handler:
-            column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, cond)
-        self.replace_table(rows, column_list, cond)
-        self.update_textbox(query)
+        self.lastClicked = f"AND {cond}"

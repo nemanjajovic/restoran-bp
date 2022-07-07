@@ -31,8 +31,8 @@ class MenuMainView(MainView):
         # ---------CONNECTIONS----------
         addItem.clicked.connect(lambda: self.show(columns))
         allButton.pressed.connect(self.form.menu_show_all)
-        drinksButton.pressed.connect(lambda: self.form.show_drinks("artikal_tip='Pice'"))
-        foodButton.pressed.connect(lambda: self.form.show_food("artikal_tip='Hrana'"))
+        drinksButton.pressed.connect(lambda: self.form.show("artikal_tip='Pice'"))
+        foodButton.pressed.connect(lambda: self.form.show("artikal_tip='Hrana'"))
         self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
 
     def show(self, columns):
@@ -164,11 +164,11 @@ class WorkersMainView(MainView):
         self.search = QLineEdit()
 
         columns = get_column_string(self.column_list)
-        self.form = WorkerAddForm(tableName, columns, self.rFrame, self.textBox)
+        self.form = WorkerForm(tableName, columns, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
-        addWorkerButton.setStyleSheet("QPushButton{max-width:120px;}")
+        addWorkerButton.setStyleSheet("QPushButton{max-width:120px; margin-left:20px;}")
 
         # --------FILL-LAYOUTS----------
         self.fill_llayout(QLabel(" "), allButton, serviceButton, kitchenButton, helperButton,  QLabel(" "), self.textBox)
@@ -177,10 +177,11 @@ class WorkersMainView(MainView):
 
         # --------CONNECTIONS-----------
         addWorkerButton.clicked.connect(lambda: self.show(columns))
-        allButton.clicked.connect(self.form.show_all)
-        serviceButton.clicked.connect(lambda: self.form.show_service("radnik_tip='Servis'"))
-        kitchenButton.clicked.connect(lambda: self.form.show_kitchen("radnik_tip='Kuhinja'"))
-        helperButton.clicked.connect(lambda: self.form.show_helpers("radnik_tip='Pomocni'"))
+        allButton.clicked.connect(self.form.worker_show_all)
+        serviceButton.clicked.connect(lambda: self.form.show("radnik_tip='Servis'"))
+        kitchenButton.clicked.connect(lambda: self.form.show("radnik_tip='Kuhinja'"))
+        helperButton.clicked.connect(lambda: self.form.show("radnik_tip='Pomocni'"))
+        self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
 
     def show(self, columns):
         self.form = WorkerAddForm(self.tableName, columns, self.rFrame, self.textBox)
