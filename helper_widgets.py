@@ -244,11 +244,15 @@ class TableInfoForm(MainForm):
         super().__init__(table, columns, textBox)
 
         self.init_values = []
+        self.column_list = column_list
+        self.tableName = table.tableName
+        self.populate_table = table.populate_table
 
         # ---------WIDGETS----------
         label_list = [QLabel(text) for text in column_list]
         self.le_list = [QLineEdit() for col in column_list]
-        test = QPushButton("Sačuvaj")
+        delButton = QPushButton("  ")
+        saveButton = QPushButton("Sačuvaj")
         
         # ----------LAYOUT----------
         for i, l in enumerate(label_list):
@@ -259,14 +263,14 @@ class TableInfoForm(MainForm):
             self.layout.addWidget(l, i, 0)
             self.layout.addWidget(self.le_list[i], i, 1)
 
-        self.layout.addWidget(test,len(self.le_list),1)
+        self.layout.addWidget(saveButton,len(self.le_list),1)
 
         # ----------STYLE-----------
         self.setStyleSheet("QLabel{font-size:16px}")
         self.setFixedSize(500,340)
         self.le_list[0].setReadOnly(True)
 
-        test.clicked.connect(lambda: self.save_changes())
+        saveButton.clicked.connect(lambda: self.save_changes())
 
     def closeEvent(self, event):
         can_exit = self.data_not_changed()
@@ -289,8 +293,41 @@ class TableInfoForm(MainForm):
         return self.init_values == current_values
 
     def save_changes(self):
-        # TODO: update database on changed row
-        pass
+        setValue, whereValue = self.get_values()
+        with Connection() as handler:
+            query = handler.update(self.tableName, setValue, whereValue)
+            self.textBox.append(query)
+            self.textBox.append(dash)
+            query, rows = handler.select("*", self.tableName, "")
+        self.populate_table(rows, self.column_list)
+        self.textBox.append(query)
+        self.textBox.append(dash)
+
+    def get_values(self):
+        """ Returns two strings, one for the SET SQL command, 
+            the other for the WHERE condition."""
+            
+        changed_columns, changed_values = self.get_changed()
+        setString = self.make_string(changed_columns, changed_values)
+        whereValue = f"{self.column_list[0]}={self.le_list[0].text()}"
+        return setString, whereValue
+    
+    def get_changed(self):
+        """ Returns two lists, one is the changed columns and
+            the other their new values."""
+
+        current_values = [self.le_list[i].text() for i in range(len(self.le_list))]
+        changed_values = list(set(current_values)-set(self.init_values))
+        changed_columns = [self.column_list[current_values.index(elem)] for elem in changed_values]
+        return changed_columns, changed_values
+
+    # format the SQL SET command arguments
+    def make_string(self, col, val):
+        setString = ""
+        for column, value in zip(col, val):
+            setString += f"{column}='{value}',"
+        setString = setString[:-1]
+        return setString
 
 class Reservations():
     def __init__(self):

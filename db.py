@@ -42,9 +42,10 @@ class DbHandler:
         command = f"INSERT INTO {table} ({columns}) VALUES ({values})"
         return command, self.cursor.execute(command)
 
-    def update(self, table, column, new_val, id_column, id_val):
-        command = f"UPDATE {table} SET {column} = '{new_val}' WHERE {id_column} = {id_val}"
-        return self.cursor.execute(command)
+    def update(self, table, setValue, whereValue):
+        command = f"UPDATE {table} SET {setValue} WHERE {whereValue}"
+        self.cursor.execute(command)
+        return command
 
     def delete(self, table, condition):
         command = f"DELETE FROM {table} WHERE {condition}"
