@@ -18,7 +18,7 @@ Install steps:</br>
 
 Assignment:</br>
     In your term paper present a database project that shows the record
-keeping and usage od restaurant data. Implement record keeping of 
+keeping and usage of restaurant data. Implement record keeping of 
 products, tables, seats, workers, guest traffic and other things,
 as needed.</br>
     Show database capabilities with apropriate queries that illustrate
