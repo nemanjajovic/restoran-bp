@@ -2,17 +2,20 @@
 A GUI for a Databases class term paper (Restaurant)
 
 Requirements:</br>
-- MS SQL Server</br>
+- Microsoft SQL Server</br>
+- SQL Server Management Studio (SSMS)
 - python, modules:</br>
   - pyside6</br>
   - pyodbc</br>
   
 Install steps:</br>
-- Install MS SQL Server and restore from backup 
-  the database located under assets/db/ 
+- Install MS SQL Server
+- Install SSMS and restore from backup 
+  the database located under assets/db/
+  - this is done by connecting to your server in SSMS, right clicking Databases in the Object Explorer on the left and selecting 'Restore Database..', check 'Device' and click on the button with dots on the right, then click 'Add', change to search for all file extentions, navigate to the backup file and select it, after that just press 'OK'
 - Install python and required modules
 - Change the server name in the db.py file in the DbHandler 
-  class self.conn object to your device or server name
+  class self.conn object to your SSMS server name
 - Start the program with 'python main.py' while in the
   repository root
 
