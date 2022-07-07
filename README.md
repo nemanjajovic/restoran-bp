@@ -21,19 +21,19 @@ Assignment:</br>
 keeping and usage od restaurant data. Implement record keeping of 
 products, tables, seats, workers, guest traffic and other things,
 as needed.</br>
-    Show database capabilities with apropriate queries that illustrate</br>
+    Show database capabilities with apropriate queries that illustrate
 functionality according to diverse criteria.</br>
-    -   Model an SQL database on the given topic - show ER diagram
-    -   Show the usage of following data types:
-        -   Date (3 entities minimum)
-        -   AlphaNumeric
-        -   Numeric (integer and floating point)
-        -   and other
-    -   Implement integrities (entity, domain and referential level)
-    -   Provide needed data to illustrate data access techniques
-    -   
-    -   Show usage of functions (date, string, aggregate, numeric, general)
-    -   
-    -   
-    -   Show queries on multiple tables (all variations of JOIN)
-    -   If possible, use one of the CASE tools for database modeling
+-   Model an SQL database on the given topic - show ER diagram
+-   Show the usage of following data types:
+    -   Date (3 entities minimum)
+    -   AlphaNumeric
+    -   Numeric (integer and floating point)
+    -   and other
+-   Implement integrities (entity, domain and referential level)
+-   Provide needed data to illustrate data access techniques
+-   
+-   Show usage of functions (date, string, aggregate, numeric, general)
+-   
+-   
+-   Show queries on multiple tables (all variations of JOIN)
+-   If possible, use one of the CASE tools for database modeling
