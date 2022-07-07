@@ -23,8 +23,8 @@ products, tables, seats, workers, guest traffic and other things,
 as needed.</br>
     Show database capabilities with apropriate queries that illustrate
 functionality according to diverse criteria.</br>
--   Model an SQL database on the given topic - show ER diagram
--   Show the usage of following data types:
+-   Model an SQL database on the given topic - show ER diagram</br>
+-   Show the usage of following data types:</br>
     -   Date (3 entities minimum)
     -   AlphaNumeric
     -   Numeric (integer and floating point)
