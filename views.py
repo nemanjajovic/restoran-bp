@@ -12,13 +12,9 @@ class MenuMainView(MainView):
         # ---------WIDGETS--------------
         self.search = QLineEdit()
         addItem = QPushButton("+ Add Item")
-        buttonGroup = QButtonGroup()
         allButton = QPushButton("SVE")
         drinksButton = QPushButton("PICE")
         foodButton = QPushButton("HRANA")
-        buttonGroup.addButton(allButton)
-        buttonGroup.addButton(drinksButton)
-        buttonGroup.addButton(foodButton)
 
         columns = get_column_string(self.column_list)
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
