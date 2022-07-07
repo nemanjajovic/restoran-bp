@@ -18,8 +18,8 @@ Install steps:</br>
 
 Assignment:</br>
     In your term paper present a database project that shows the record</br>
-keeping and usage od restaurant data. Implement record keeping of </br>
-products, tables, seats, workers, guest traffic and other things,</br>
+keeping and usage od restaurant data. Implement record keeping of 
+products, tables, seats, workers, guest traffic and other things,
 as needed.</br>
     Show database capabilities with apropriate queries that illustrate</br>
 functionality according to diverse criteria.</br>
