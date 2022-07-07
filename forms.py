@@ -46,21 +46,21 @@ class MenuForm(MainForm):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, "")
-        self.replace_table(rows, column_list)
+        self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
-    def show_drinks(self):
+    def show_drinks(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "artikal_tip='Pice'")
-        self.replace_table(rows, column_list)
+            query, rows = handler.select("*", self.tableName, cond)
+        self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
 
-    def show_food(self):
+    def show_food(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "artikal_tip='Hrana'")
-        self.replace_table(rows, column_list)
+            query, rows = handler.select("*", self.tableName, cond)
+        self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
 
 class ScheduleAddForm(MainForm):
@@ -119,7 +119,7 @@ class ScheduleAddForm(MainForm):
         values = f"'{_id}','{self.date}','{self.shift.text()}','{self.position.text()}'"
         column_list = self.insert_worker(columns, values)
         query, rows = handler.select("*", self.tableName, "")
-        self.replace_table(rows, column_list)
+        self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
     def insert_worker(self, columns, values):
@@ -142,7 +142,7 @@ class ScheduleAddForm(MainForm):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, f"raspored_datum='{date}'")
-        self.replace_table(rows, column_list)
+        self.replace_table(rows, column_list, "")
         self.update_textbox(query)
         
 
@@ -199,7 +199,7 @@ class ReceiptForm(MainForm):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, f"racun_datum='{date}'")
-        self.replace_table(rows, column_list)
+        self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
 class WorkerAddForm(MainForm):
@@ -243,23 +243,23 @@ class WorkerAddForm(MainForm):
         values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
         self.insert(self.tableName, columns, values)
 
-    def show_service(self):
+    def show_service(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "radnik_tip='Servis'")
-        self.replace_table(rows, column_list)
+            query, rows = handler.select("*", self.tableName, cond)
+        self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
 
-    def show_kitchen(self):
+    def show_kitchen(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "radnik_tip='Kuhinja'")
-        self.replace_table(rows, column_list)
+            query, rows = handler.select("*", self.tableName, cond)
+        self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
     
-    def show_helpers(self):
+    def show_helpers(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, "radnik_tip='Pomocni'")
-        self.replace_table(rows, column_list)
+            query, rows = handler.select("*", self.tableName, cond)
+        self.replace_table(rows, column_list, cond)
         self.update_textbox(query)

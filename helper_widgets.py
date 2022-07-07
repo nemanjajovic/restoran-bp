@@ -19,7 +19,7 @@ class MainView(QWidget):
         # ----------WIDGETS----------
         self.nameLabel = QLabel(tableName)
         self.textBox = QTextEdit()
-        self.tableWidget = Table(tableName, self.rows, self.column_list, self.textBox)
+        self.tableWidget = Table(tableName, self.rows, self.column_list, self.textBox, "")
 
         # ----------LAYOUTS----------
         self.layout = QHBoxLayout()  # parent
@@ -143,13 +143,13 @@ class MainForm(QMainWindow):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, "")
-        self.replace_table(rows, column_list)
+        self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
-    def replace_table(self, rows, column_list):
+    def replace_table(self, rows, column_list, cond):
         _widget = self.rFrame.layout.takeAt(0)
         _widget.widget().deleteLater()
-        self.table = Table(self.tableName, rows, column_list, self.textBox)
+        self.table = Table(self.tableName, rows, column_list, self.textBox, cond)
         self.rFrame.layout.addWidget(self.table)
 
     def update_textbox(self, query):
@@ -178,8 +178,9 @@ class IconLabel(QWidget):
             layout.addStretch()
 
 class Table(QTableWidget):
-    def __init__(self, name, rows, columns, textBox):
+    def __init__(self, name, rows, columns, textBox, cond):
         super().__init__(len(rows),len(columns))
+        self.cond = cond
         self.column_dict = {}
         self.tableName = name
         self.textBox = textBox
@@ -224,7 +225,7 @@ class Table(QTableWidget):
     def headerOnClick(self, i):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.order_by(self.tableName, f"{column_list[i]} {self.column_dict[i]}")
+            query, rows = handler.order_by(self.tableName, f"{column_list[i]} {self.column_dict[i]}", self.cond)
         self.switch_order(i)
         self.populate_table(rows, column_list)
         self.textBox.append(query)

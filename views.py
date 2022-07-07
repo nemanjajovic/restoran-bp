@@ -12,9 +12,13 @@ class MenuMainView(MainView):
         # ---------WIDGETS--------------
         self.search = QLineEdit()
         addItem = QPushButton("+ Add Item")
+        buttonGroup = QButtonGroup()
         allButton = QPushButton("SVE")
         drinksButton = QPushButton("PICE")
         foodButton = QPushButton("HRANA")
+        buttonGroup.addButton(allButton)
+        buttonGroup.addButton(drinksButton)
+        buttonGroup.addButton(foodButton)
 
         columns = get_column_string(self.column_list)
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
@@ -31,8 +35,8 @@ class MenuMainView(MainView):
         # ---------CONNECTIONS----------
         addItem.clicked.connect(lambda: self.show(columns))
         allButton.pressed.connect(self.form.show_all)
-        drinksButton.pressed.connect(self.form.show_drinks)
-        foodButton.pressed.connect(self.form.show_food)
+        drinksButton.pressed.connect(lambda: self.form.show_drinks("artikal_tip='Pice'"))
+        foodButton.pressed.connect(lambda: self.form.show_food("artikal_tip='Hrana'"))
 
     def show(self, columns):
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
@@ -177,9 +181,9 @@ class WorkersMainView(MainView):
         # --------CONNECTIONS-----------
         addWorkerButton.clicked.connect(lambda: self.show(columns))
         allButton.clicked.connect(self.form.show_all)
-        serviceButton.clicked.connect(self.form.show_service)
-        kitchenButton.clicked.connect(self.form.show_kitchen)
-        helperButton.clicked.connect(self.form.show_helpers)
+        serviceButton.clicked.connect(lambda: self.form.show_service("radnik_tip='Servis'"))
+        kitchenButton.clicked.connect(lambda: self.form.show_kitchen("radnik_tip='Kuhinja'"))
+        helperButton.clicked.connect(lambda: self.form.show_helpers("radnik_tip='Pomocni'"))
 
     def show(self, columns):
         self.form = WorkerAddForm(self.tableName, columns, self.rFrame, self.textBox)

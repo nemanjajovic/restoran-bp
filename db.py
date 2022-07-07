@@ -32,8 +32,9 @@ class DbHandler:
         rows = self.get_row_list(command)
         return command, rows
     
-    def order_by(self, table, column):
-        command = f"""SELECT * FROM {table} ORDER BY {column};"""
+    def order_by(self, table, column, cond):
+        cond = f"WHERE {cond}" if cond else ""
+        command = f"""SELECT * FROM {table} {cond} ORDER BY {column};"""
         rows = self.get_row_list(command)
         return command, rows
 
