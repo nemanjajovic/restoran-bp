@@ -1041,6 +1041,7 @@ search = """
 """
 add = """
     max-width:100px;
+    margin-left:20px;
 """
 menu = """
     text-align:left;
