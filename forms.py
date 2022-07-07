@@ -8,6 +8,8 @@ class MenuForm(MainForm):
     """ A form window for the menu table."""
     def __init__(self, tableName, columns, frame, textBox):
         super().__init__(tableName, columns, textBox)
+        self.lastClicked = ""
+
         # ---------WIDGETS---------
         self.name = QLineEdit()
         self.type = QComboBox()
@@ -49,12 +51,25 @@ class MenuForm(MainForm):
         self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
+    def search(self, text):
+        cond = f"artikal_naziv = '{text}' or artikal_kategorija = '{text}' {self.lastClicked}" if text else ""
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, cond)
+        self.replace_table(rows, column_list, cond)
+        self.update_textbox(query)
+
+    def menu_show_all(self):
+        self.lastClicked = ""
+        self.show_all()
+
     def show_drinks(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)
         self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
+        self.lastClicked = f"AND {cond}"
 
     def show_food(self, cond):
         with Connection() as handler:
@@ -62,6 +77,7 @@ class MenuForm(MainForm):
             query, rows = handler.select("*", self.tableName, cond)
         self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
+        self.lastClicked = f"AND {cond}"
 
 class ScheduleAddForm(MainForm):
     """ A form window for the schedule table."""

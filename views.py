@@ -30,9 +30,10 @@ class MenuMainView(MainView):
         
         # ---------CONNECTIONS----------
         addItem.clicked.connect(lambda: self.show(columns))
-        allButton.pressed.connect(self.form.show_all)
+        allButton.pressed.connect(self.form.menu_show_all)
         drinksButton.pressed.connect(lambda: self.form.show_drinks("artikal_tip='Pice'"))
         foodButton.pressed.connect(lambda: self.form.show_food("artikal_tip='Hrana'"))
+        self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
 
     def show(self, columns):
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
