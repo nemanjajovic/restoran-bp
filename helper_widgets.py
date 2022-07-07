@@ -289,11 +289,11 @@ class TableInfoForm(MainForm):
                 can_exit = True
 
     def data_not_changed(self):
-        current_values = [self.le_list[i].text() for i in range(len(self.le_list))]
+        current_values = self.get_line_edit()
         return self.init_values == current_values
 
     def save_changes(self):
-        setValue, whereValue = self.get_values()
+        setValue, whereValue = self.get_sql_values()
         with Connection() as handler:
             query = handler.update(self.tableName, setValue, whereValue)
             self.textBox.append(query)
@@ -302,11 +302,12 @@ class TableInfoForm(MainForm):
         self.populate_table(rows, self.column_list)
         self.textBox.append(query)
         self.textBox.append(dash)
+        self.init_values = self.get_line_edit()
 
-    def get_values(self):
+    def get_sql_values(self):
         """ Returns two strings, one for the SET SQL command, 
             the other for the WHERE condition."""
-            
+
         changed_columns, changed_values = self.get_changed()
         setString = self.make_string(changed_columns, changed_values)
         whereValue = f"{self.column_list[0]}={self.le_list[0].text()}"
@@ -316,7 +317,7 @@ class TableInfoForm(MainForm):
         """ Returns two lists, one is the changed columns and
             the other their new values."""
 
-        current_values = [self.le_list[i].text() for i in range(len(self.le_list))]
+        current_values = self.get_line_edit()
         changed_values = list(set(current_values)-set(self.init_values))
         changed_columns = [self.column_list[current_values.index(elem)] for elem in changed_values]
         return changed_columns, changed_values
@@ -328,6 +329,9 @@ class TableInfoForm(MainForm):
             setString += f"{column}='{value}',"
         setString = setString[:-1]
         return setString
+
+    def get_line_edit(self):
+        return [self.le_list[i].text() for i in range(len(self.le_list))]
 
 class Reservations():
     def __init__(self):
