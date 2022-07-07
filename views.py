@@ -31,8 +31,8 @@ class MenuMainView(MainView):
         # ---------CONNECTIONS----------
         addItem.clicked.connect(lambda: self.show(columns))
         allButton.pressed.connect(self.form.menu_show_all)
-        drinksButton.pressed.connect(lambda: self.form.show("artikal_tip='Pice'"))
-        foodButton.pressed.connect(lambda: self.form.show("artikal_tip='Hrana'"))
+        drinksButton.pressed.connect(lambda: self.form.show_table("artikal_tip='Pice'"))
+        foodButton.pressed.connect(lambda: self.form.show_table("artikal_tip='Hrana'"))
         self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
 
     def show(self, columns):
@@ -178,11 +178,11 @@ class WorkersMainView(MainView):
         # --------CONNECTIONS-----------
         addWorkerButton.clicked.connect(lambda: self.show(columns))
         allButton.clicked.connect(self.form.worker_show_all)
-        serviceButton.clicked.connect(lambda: self.form.show("radnik_tip='Servis'"))
-        kitchenButton.clicked.connect(lambda: self.form.show("radnik_tip='Kuhinja'"))
-        helperButton.clicked.connect(lambda: self.form.show("radnik_tip='Pomocni'"))
+        serviceButton.clicked.connect(lambda: self.form.show_table("radnik_tip='Servis'"))
+        kitchenButton.clicked.connect(lambda: self.form.show_table("radnik_tip='Kuhinja'"))
+        helperButton.clicked.connect(lambda: self.form.show_table("radnik_tip='Pomocni'"))
         self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
 
     def show(self, columns):
-        self.form = WorkerAddForm(self.tableName, columns, self.rFrame, self.textBox)
+        self.form = WorkerForm(self.tableName, columns, self.rFrame, self.textBox)
         self.form.show()

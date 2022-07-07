@@ -44,7 +44,7 @@ class MenuForm(MainForm):
 
     def confirm(self,columns):     
         values = f"'{self.name.text()}','{self.type.currentText()}','{self.category.text()}','{self.price.text()}'"
-        self.insert(self.tableName, columns, values)
+        self.insert(columns, values)
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, "")
@@ -63,7 +63,7 @@ class MenuForm(MainForm):
         self.lastClicked = ""
         self.show_all()
 
-    def show(self, cond):
+    def show_table(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)
@@ -251,7 +251,12 @@ class WorkerForm(MainForm):
 
     def confirm(self, columns):     
         values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
-        self.insert(self.tableName, columns, values)
+        self.insert(columns, values)
+        with Connection() as handler:
+            column_list, _ = handler.get_column_names(self.tableName)
+            query, rows = handler.select("*", self.tableName, "")
+        self.replace_table(rows, column_list, "")
+        self.update_textbox(query)
 
     def worker_show_all(self):
         self.lastClicked = ""
@@ -265,7 +270,7 @@ class WorkerForm(MainForm):
         self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
 
-    def show(self, cond):
+    def show_table(self, cond):
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, cond)

@@ -251,7 +251,7 @@ class TableInfoForm(MainForm):
         # ---------WIDGETS----------
         label_list = [QLabel(text) for text in column_list]
         self.le_list = [QLineEdit() for col in column_list]
-        delButton = QPushButton("  ")
+        delButton = QPushButton("Izbrisi")
         saveButton = QPushButton("Sačuvaj")
         
         # ----------LAYOUT----------
@@ -264,6 +264,7 @@ class TableInfoForm(MainForm):
             self.layout.addWidget(self.le_list[i], i, 1)
 
         self.layout.addWidget(saveButton,len(self.le_list),1)
+        self.layout.addWidget(delButton,len(self.le_list),0)
 
         # ----------STYLE-----------
         self.setStyleSheet("QLabel{font-size:16px}")
