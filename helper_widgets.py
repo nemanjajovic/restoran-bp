@@ -272,18 +272,13 @@ class TableInfoForm(MainForm):
         self.le_list[0].setReadOnly(True)
 
         saveButton.clicked.connect(lambda: self.save_changes('button'))
-        delButton.clicked.connect(self.del_row)
+        delButton.clicked.connect(self.del_dialog)
 
     def closeEvent(self, event):
         can_exit = self.data_not_changed()
         while not can_exit:
-            dlg = QMessageBox(self)
-            dlg.setWindowTitle("Promjene")
-            dlg.setText("Sačuvaj promjene?")
-            dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            dlg.setIcon(QMessageBox.Question)
-            button = dlg.exec()
-            
+            save = SaveDialog(self)
+            button = save.exec()
             if button == QMessageBox.Yes:
                 self.save_changes('dialog')
                 can_exit = True
@@ -293,6 +288,15 @@ class TableInfoForm(MainForm):
     def data_not_changed(self):
         current_values = self.get_line_edit()
         return self.init_values == current_values
+
+    def del_dialog(self):
+        delete = DeleteDialog(self)
+        button = delete.exec()
+        if button == QMessageBox.Yes:
+            self.del_row()
+            self.destroy()
+        else:
+            delete.destroy()
 
     def del_row(self):
         _, whereValue = self.get_sql_values()
@@ -304,8 +308,7 @@ class TableInfoForm(MainForm):
         self.populate_table(rows, self.column_list)
         self.textBox.append(query)
         self.textBox.append(dash)
-        self.destroy()
-
+            
     def save_changes(self, caller):
         setValue, whereValue = self.get_sql_values()
         with Connection() as handler:
@@ -350,6 +353,22 @@ class TableInfoForm(MainForm):
 
     def get_line_edit(self):
         return [self.le_list[i].text() for i in range(len(self.le_list))]
+
+class SaveDialog(QMessageBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setWindowTitle("Promjene")
+        self.setText("Sačuvaj promjene?")
+        self.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        self.setIcon(QMessageBox.Question)
+
+class DeleteDialog(QMessageBox):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setWindowTitle("Upozorenje")
+        self.setText("Jeste li sigurni da zelite izbrisati red?")
+        self.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        self.setIcon(QMessageBox.Warning)
 
 class Reservations():
     def __init__(self):
