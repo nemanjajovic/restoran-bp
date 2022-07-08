@@ -271,7 +271,8 @@ class TableInfoForm(MainForm):
         self.setFixedSize(500,340)
         self.le_list[0].setReadOnly(True)
 
-        saveButton.clicked.connect(lambda: self.save_changes())
+        saveButton.clicked.connect(lambda: self.save_changes('button'))
+        delButton.clicked.connect(self.del_row)
 
     def closeEvent(self, event):
         can_exit = self.data_not_changed()
@@ -284,7 +285,7 @@ class TableInfoForm(MainForm):
             button = dlg.exec()
             
             if button == QMessageBox.Yes:
-                self.save_changes()
+                self.save_changes('dialog')
                 can_exit = True
             else:
                 can_exit = True
@@ -303,8 +304,9 @@ class TableInfoForm(MainForm):
         self.populate_table(rows, self.column_list)
         self.textBox.append(query)
         self.textBox.append(dash)
-        
-    def save_changes(self):
+        self.destroy()
+
+    def save_changes(self, caller):
         setValue, whereValue = self.get_sql_values()
         with Connection() as handler:
             query = handler.update(self.tableName, setValue, whereValue)
@@ -315,6 +317,10 @@ class TableInfoForm(MainForm):
         self.textBox.append(query)
         self.textBox.append(dash)
         self.init_values = self.get_line_edit()
+        if caller == 'dialog':
+            return None
+        else:
+            self.destroy()
 
     def get_sql_values(self):
         """ Returns two strings, one for the SET SQL command, 
