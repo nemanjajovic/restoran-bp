@@ -1,0 +1,34 @@
+# GENERAL
+IMPORTANT: same cell values in a row not allowed WHEN UPDATING
+add and implement delete button to table double click form
+make About info form
+add and implement make and open backup under File
+
+# MENU
+on PICE and HRANA click events show their respective main 
+        categories as 'sub' buttons (under click event button)
+
+# SCHSEDULE
+implement raspored weekly form  
+make table show only current day 
+raspored add form implement time combobox 
+        and fix worker picking for selected day
+
+# RESERVATIONS
+simulate reservations on current day if not done already 
+make reservation forms on table click   
+        input form on free table
+        info and cancel on reserved
+        info and pay on taken
+implement slider functionality
+
+# RECEIPTS
+on SHOW ALL click slect from newest to oldest
+
+# WORKERS
+add isplati button that sets radnik_sati to zero
+
+# DATABASE
+add alcoholic column to MENI ARTIKLI
+new table ZAUZETI (ili REZERVISANI) stolovi
+
