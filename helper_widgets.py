@@ -293,6 +293,17 @@ class TableInfoForm(MainForm):
         current_values = self.get_line_edit()
         return self.init_values == current_values
 
+    def del_row(self):
+        _, whereValue = self.get_sql_values()
+        with Connection() as handler:
+            query = handler.delete(self.tableName, whereValue)
+            self.textBox.append(query)
+            self.textBox.append(dash)
+            query, rows = handler.select("*", self.tableName, "")
+        self.populate_table(rows, self.column_list)
+        self.textBox.append(query)
+        self.textBox.append(dash)
+        
     def save_changes(self):
         setValue, whereValue = self.get_sql_values()
         with Connection() as handler:
