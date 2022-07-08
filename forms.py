@@ -9,17 +9,18 @@ class MenuForm(MainForm):
     def __init__(self, tableName, columns, frame, textBox):
         super().__init__(tableName, columns, textBox)
         self.lastClicked = ""
-
+        self.itemCategories = [
+            ["Topli Napitak","Sok","Pivo","Vino","Koktel","Zestoko Pice","Voda"], # drinks
+            ["Meso","Riba","Salata","Dezert","Prilog"],      # food
+        ]
         # ---------WIDGETS---------
         self.name = QLineEdit()
-        self.type = QComboBox()
+        self.typeBox = QComboBox()
+        self.catBox = QComboBox()
         self.category = QLineEdit()
         self.price = QLineEdit()
         self.button = QPushButton("Confirm")
         self.rFrame = frame
-
-        self.type.addItem("Pice")
-        self.type.addItem("Hrana")
 
         # labels
         lnames = ["Naziv: ", "Tip: ", "Kategorija: ", "Cijena: "]
@@ -28,28 +29,39 @@ class MenuForm(MainForm):
             label.setAlignment(Qt.AlignRight)
             self.layout.addWidget(label, i, 0)
 
+        # ----FILL-COMBOBOX-----
+        self.typeBox.addItem("Pice")
+        self.typeBox.addItem("Hrana")
+        self.catBox.addItems(self.itemCategories[0])
+
+
         # ---------LAYOUT---------
         self.layout.addWidget(self.name, 0, 1)
-        self.layout.addWidget(self.type, 1, 1)
-        self.layout.addWidget(self.category, 2, 1)
+        self.layout.addWidget(self.typeBox, 1, 1)
+        self.layout.addWidget(self.catBox, 2, 1)
         self.layout.addWidget(self.price, 3, 1)
         self.layout.addWidget(self.button, 4, 1)
 
         # ----------STYLES---------
-        self.type.setStyleSheet("QComboBox{max-width:257px;}")
-        self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}")
+        self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:50px;}QComboBox{max-width:257px;}")
         self.setFixedSize(500,340)
 
+        # ---------CONNECTIONS----------
         self.button.pressed.connect(lambda: self.confirm(columns))
+        self.typeBox.currentIndexChanged.connect(self.update_combobox)
 
     def confirm(self,columns):     
-        values = f"'{self.name.text()}','{self.type.currentText()}','{self.category.text()}','{self.price.text()}'"
+        values = f"'{self.name.text()}','{self.typeBox.currentText()}','{self.catBox.text()}','{self.price.text()}'"
         self.insert(columns, values)
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
             query, rows = handler.select("*", self.tableName, "")
         self.replace_table(rows, column_list, "")
         self.update_textbox(query)
+
+    def update_combobox(self, index):
+        self.catBox.clear()
+        self.catBox.addItems(self.itemCategories[index])
 
     def search(self, text):
         cond = f"artikal_naziv LIKE '{text}%' {self.lastClicked}" if text else ""
