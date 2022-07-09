@@ -1,6 +1,5 @@
 # GENERAL
 IMPORTANT: same cell values in a row not allowed WHEN UPDATING
-add and implement delete button to table double click form
 make About info form
 add and implement make and open backup under File
 FIX BUG WWHEN CHANGING TABLE WHILE A CATEGORY IS SELECTED
