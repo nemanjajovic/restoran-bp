@@ -3,16 +3,14 @@ from PySide6 import QtWidgets
 from styles import *
 from db import Connection
 from helper_widgets import MainForm, get_column_string
+from data import itemCategories
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
     def __init__(self, tableName, columns, frame, textBox):
         super().__init__(tableName, columns, textBox)
         self.lastClicked = ""
-        self.itemCategories = [
-            ["Topli Napitak","Sok","Pivo","Vino","Koktel","Zestoko Pice","Voda"], # drinks
-            ["Meso","Riba","Salata","Dezert","Prilog"],      # food
-        ]
+        
         # ---------WIDGETS---------
         self.name = QLineEdit()
         self.typeBox = QComboBox()
@@ -32,7 +30,7 @@ class MenuForm(MainForm):
         # ----FILL-COMBOBOX-----
         self.typeBox.addItem("Pice")
         self.typeBox.addItem("Hrana")
-        self.catBox.addItems(self.itemCategories[0])
+        self.catBox.addItems(itemCategories[0])
 
 
         # ---------LAYOUT---------
@@ -61,7 +59,7 @@ class MenuForm(MainForm):
 
     def update_combobox(self, index):
         self.catBox.clear()
-        self.catBox.addItems(self.itemCategories[index])
+        self.catBox.addItems(itemCategories[index])
 
     def search(self, text):
         cond = f"artikal_naziv LIKE '{text}%' {self.lastClicked}" if text else ""
@@ -70,10 +68,6 @@ class MenuForm(MainForm):
             query, rows = handler.select("*", self.tableName, cond)
         self.replace_table(rows, column_list, cond)
         self.update_textbox(query)
-
-    def menu_show_all(self):
-        self.lastClicked = ""
-        self.show_all()
 
     def show_table(self, cond):
         with Connection() as handler:

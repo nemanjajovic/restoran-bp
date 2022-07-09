@@ -5,6 +5,7 @@ from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
 from db import Connection
 from forms import *
+from data import itemCategories
 
 class MenuMainView(MainView):
     def __init__(self, tableName):
@@ -12,9 +13,12 @@ class MenuMainView(MainView):
         # ---------WIDGETS--------------
         self.search = QLineEdit()
         addItem = QPushButton("+ Add Item")
-        allButton = QPushButton("SVE")
-        drinksButton = QPushButton("PICE")
-        foodButton = QPushButton("HRANA")
+        tableNameLabel = QLabel(tableName)
+        self.allButton = QPushButton("SVE")
+        self.drinksButton = QPushButton("PICE")
+        self.foodButton = QPushButton("HRANA")
+        self.drinkButtons = list(map(self.button, itemCategories[0]))
+        self.foodButtons = list(map(self.button, itemCategories[1]))
 
         columns = get_column_string(self.column_list)
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
@@ -22,22 +26,42 @@ class MenuMainView(MainView):
         # ---------STYLES---------------
         self.search.setStyleSheet(search)
         addItem.setStyleSheet(add)
+        tableNameLabel.setStyleSheet("QLabel{max-height:47px;padding-left:5px;font-size:20pt;}")
+        for button in self.drinkButtons:
+            button.setStyleSheet("QPushButton{font-size:12px;max-width:200px;}")
+        for button in self.foodButtons:
+            button.setStyleSheet("QPushButton{font-size:12px;max-width:200px;}")
         
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(QLabel(" "), allButton, drinksButton, foodButton, QLabel(" "), self.textBox)
+        self.fill_llayout(tableNameLabel, QLabel(" "), self.allButton, self.drinksButton, self.foodButton, QLabel(" "), self.textBox)
         self.fill_rtop(self.search, addItem)
         self.fill_rlayout(self.tableWidget)
         
         # ---------CONNECTIONS----------
         addItem.clicked.connect(lambda: self.show(columns))
-        allButton.pressed.connect(self.form.menu_show_all)
-        drinksButton.pressed.connect(lambda: self.form.show_table("artikal_tip='Pice'"))
-        foodButton.pressed.connect(lambda: self.form.show_table("artikal_tip='Hrana'"))
+        self.allButton.pressed.connect(self.allClick)
+        self.drinksButton.pressed.connect(self.drinkClick)
+        self.foodButton.pressed.connect(self.foodClick)
         self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
 
     def show(self, columns):
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
         self.form.show()
+
+    def button(self, label):
+        return QPushButton(label)
+
+    def allClick(self):
+        self.replace_llayout(QLabel(" "), self.allButton, self.drinksButton, self.foodButton, QLabel(" "), self.textBox)
+        self.form.show_table("")
+
+    def drinkClick(self):
+        self.replace_llayout(QLabel(" "), self.allButton, self.drinksButton, self.drinkButtons[0],self.drinkButtons[1],self.drinkButtons[2],self.drinkButtons[3],self.drinkButtons[4],self.drinkButtons[5],self.drinkButtons[6],self.foodButton, QLabel(" "), self.textBox)
+        self.form.show_table("artikal_tip='Pice'")
+
+    def foodClick(self):
+        self.replace_llayout(QLabel(" "), self.allButton, self.drinksButton, self.foodButton, self.foodButtons[0],self.foodButtons[1],self.foodButtons[2],self.foodButtons[3],self.foodButtons[4], QLabel(" "), self.textBox)
+        self.form.show_table("artikal_tip='Hrana'")
 
 class ScheduleMainView(MainView):
     def __init__(self, tableName):

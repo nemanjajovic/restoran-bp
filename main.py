@@ -84,6 +84,7 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.setFixedSize(1240,800)
+    #window.setWindowFlags(Qt.FramelessWindowHint)
     window.show()
 
     app.setStyleSheet(qss)

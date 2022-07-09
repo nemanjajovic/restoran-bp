@@ -52,9 +52,15 @@ class MainView(QWidget):
         self.update_textbox(self.query)
 
     def fill_llayout(self, *widgets):
+        self.fill(self.lFrame, self.llayout, widgets)
+
+    def replace_llayout(self, *widgets):
+        for i in reversed(range(self.lFrame.layout.count())): 
+            self.lFrame.layout.itemAt(i).widget().setParent(None)
         widgets = list(widgets)
         widgets.insert(0,self.nameLabel) # make first widget
-        self.fill(self.lFrame, self.llayout, widgets)
+        for widget in widgets:
+            self.lFrame.layout.addWidget(widget)
     
     def fill_rlayout(self, *widgets):
         self.fill(self.rFrame, self.rlayout, widgets)
