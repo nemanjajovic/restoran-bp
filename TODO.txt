@@ -1,18 +1,18 @@
 # GENERAL
 IMPORTANT: same cell values in a row not allowed WHEN UPDATING
+FIX BUG WHEN CHANGING TABLE WHILE A CATEGORY IS SELECTED: save last select query
 make About info form
-add and implement make and open backup under File
-FIX BUG WWHEN CHANGING TABLE WHILE A CATEGORY IS SELECTED
+implement make and open backup under File
+
+# DATABASE
+add alcoholic column to MENI ARTIKLI
+new table ZAUZETI (ili REZERVISANI) stolovi
 
 # MENU
-on PICE and HRANA click events show their respective main 
-        categories as 'sub' buttons (under click event button)
 
 # SCHSEDULE
 implement raspored weekly form  
-make table show only current day 
-raspored add form implement time combobox 
-        and fix worker picking for selected day
+add form: fix worker picking for selected day
 
 # RESERVATIONS
 simulate reservations on current day if not done already 
@@ -23,12 +23,7 @@ make reservation forms on table click
 implement slider functionality
 
 # RECEIPTS
-on SHOW ALL click slect by datum DESC and time DESC 
+on SHOW ALL click select by datum DESC and time DESC 
 
 # WORKERS
 add isplati button that sets radnik_sati to zero
-
-# DATABASE
-add alcoholic column to MENI ARTIKLI
-new table ZAUZETI (ili REZERVISANI) stolovi
-
