@@ -3,6 +3,7 @@ from PySide6.QtCore import QSize, Qt ,QAbstractTableModel
 from PySide6.QtGui import QPixmap, QIcon, QMouseEvent
 from styles import *
 from db import Connection
+from datetime import datetime
 
 class MainView(QWidget):
     """ A layout parent class for all views, takes one string
@@ -11,10 +12,14 @@ class MainView(QWidget):
     def __init__(self, tableName):
         super().__init__()
         self.tableName = tableName
+        
         # first query to get all rows and query string
         with Connection() as handler:
             self.column_list, _ = handler.get_column_names(tableName)
-            self.query, self.rows = handler.select("*", tableName, "")
+            if tableName == "Raspored":
+                self.query, self.rows = handler.select("*", tableName, f"raspored_datum='{datetime.today().strftime('%Y-%m-%d')}' ORDER BY pocetak_smjene")
+            else:
+                self.query, self.rows = handler.select("*", tableName, "")
 
         # ----------WIDGETS----------
         self.nameLabel = QLabel(tableName)
