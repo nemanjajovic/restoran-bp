@@ -5,7 +5,7 @@ from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon
 from db import Connection
 from forms import *
-from data import itemCategories
+from data import itemCategories, workerCategories
 
 class MenuMainView(MainView):
     def __init__(self, tableName):
@@ -43,6 +43,10 @@ class MenuMainView(MainView):
         self.drinksButton.pressed.connect(self.drinkClick)
         self.foodButton.pressed.connect(self.foodClick)
         self.search.returnPressed.connect(lambda: self.form.search(self.search.text()))
+        for button in self.drinkButtons:
+            button.pressed.connect(lambda l=button.text(): self.form.show_table(f"artikal_kategorija='{l}'"))
+        for button in self.foodButtons:
+            button.pressed.connect(lambda l=button.text(): self.form.show_table(f"artikal_kategorija='{l}'"))
 
     def show(self, columns):
         self.form = MenuForm(self.tableName, columns, self.rFrame, self.textBox)
@@ -72,15 +76,14 @@ class ScheduleMainView(MainView):
         self.weekButton = QPushButton("Pregled Sedmice")
 
         self.columns = get_column_string(self.column_list)
-        self.form = ScheduleAddForm(tableName, self.columns, self.calendar, self.rFrame, self.textBox)
+        self.form = ScheduleForm(tableName, self.columns, self.calendar, self.rFrame, self.textBox)
 
         # ---------STYLES---------------
         self.calendar.setStyleSheet(cal)
 
         # --------FILL-LAYOUTS----------  
-        self.fill_llayout(self.calendar, addButton, self.weekButton, self.textBox)
+        self.fill_llayout(self.nameLabel, self.calendar, addButton, self.weekButton, self.textBox)
         self.fill_rlayout(self.tableWidget)
-
         # ----------CONNECTIONS----------
         addButton.clicked.connect(self.show)
         self.calendar.clicked.connect(self.select_date)
@@ -90,7 +93,7 @@ class ScheduleMainView(MainView):
 
     def select_date(self, date):
         self.form.show_date(date)
-        self.form = ScheduleAddForm(self.tableName, self.columns, self.calendar, self.rFrame, self.textBox)
+        self.form = ScheduleForm(self.tableName, self.columns, self.calendar, self.rFrame, self.textBox)
 
 class ReservationMainView(MainView):
     def __init__(self, tableName):
@@ -131,7 +134,7 @@ class ReservationMainView(MainView):
         self.tFrame.setObjectName("frame2")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(QLabel(" "),self.calendar, self.textBox,self.freeLabel, self.reservedLabel, self.takenLabel)
+        self.fill_llayout(self.nameLabel, QLabel(" "),self.calendar, self.textBox,self.freeLabel, self.reservedLabel, self.takenLabel)
         self.fill_rtop(sliderLbl, self.slider)  
         self.rlayout.addWidget(self.rFrame)
         self.rlayout.setContentsMargins(0, 0, 0, 0)
@@ -169,7 +172,7 @@ class ReceiptMainView(MainView):
         self.search.setStyleSheet(search)
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(calendar, allButton, self.button, self.textBox)
+        self.fill_llayout(self.nameLabel, calendar, allButton, self.button, self.textBox)
         self.fill_rtop(self.search)
         self.fill_rlayout(self.tableWidget)
 
@@ -195,7 +198,7 @@ class WorkersMainView(MainView):
         addWorkerButton.setStyleSheet("QPushButton{max-width:120px; margin-left:20px;}")
 
         # --------FILL-LAYOUTS----------
-        self.fill_llayout(QLabel(" "), allButton, serviceButton, kitchenButton, helperButton,  QLabel(" "), self.textBox)
+        self.fill_llayout(self.nameLabel, QLabel(" "), allButton, serviceButton, kitchenButton, helperButton,  QLabel(" "), self.textBox)
         self.fill_rtop(self.search, addWorkerButton)
         self.fill_rlayout(self.tableWidget)
 
