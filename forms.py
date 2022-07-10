@@ -3,7 +3,7 @@ from PySide6 import QtWidgets
 from styles import *
 from db import Connection
 from helper_widgets import MainForm, get_column_string
-from data import itemCategories
+from data import itemCategories, workerCategories
 
 class MenuForm(MainForm):
     """ A form window for the menu table."""
@@ -77,7 +77,7 @@ class MenuForm(MainForm):
         self.update_textbox(query)
         self.lastClicked = f"AND {cond}"
 
-class ScheduleAddForm(MainForm):
+class ScheduleForm(MainForm):
     """ A form window for the schedule table."""
     def __init__(self, table, columns, calendar, frame, textBox):
         super().__init__(table, columns, textBox)
@@ -88,15 +88,9 @@ class ScheduleAddForm(MainForm):
         self.ids = [row[0] for row in self.workers]
 
         # ---------WIDGETS---------
-        dateLabel = QLabel("Datum: " + _date)
-        self.shift = QLineEdit()
-        self.position = QLineEdit()
+        ldateLabel = QLabel("Datum: ")
+        rdateLabel = QLabel(_date)
         button = QPushButton("Confirm")
-
-        self.workerBox = QComboBox()
-        for row in self.workers:
-            # name + ' ' + surname
-            self.workerBox.addItem(row[1]+' '+ row[2]) 
 
         # labels
         lnames = [ "Radnik: ", "Pocetak Smjene: ", "Pozicija: "]
@@ -104,15 +98,31 @@ class ScheduleAddForm(MainForm):
             label = QLabel(text)
             label.setAlignment(Qt.AlignRight)
             self.layout.addWidget(label, i+1, 0)
+
+        # -------COMBOBOXES--------
+        self.workerBox = QComboBox()
+        for row in self.workers:
+            # name + ' ' + surname
+            self.workerBox.addItem(row[1]+' '+ row[2]) 
+
+        self.typeBox = QComboBox()
+        for elem in ["Servis", "Kuhinja", "Pomocni"]:
+            self.typeBox.addItem(elem)
+
+        self.timeBox = QComboBox()
+        for time in ['09:00', '10:00', '11:00', '12:00', '13:00']:
+            self.timeBox.addItem(time)
         
         # ---------LAYOUT---------
-        self.layout.addWidget(dateLabel, 0, 0)
+        self.layout.addWidget(ldateLabel, 0, 0)
+        self.layout.addWidget(rdateLabel, 0, 1)
         self.layout.addWidget(self.workerBox, 1, 1)
-        self.layout.addWidget(self.shift, 2, 1)
-        self.layout.addWidget(self.position, 3, 1)
+        self.layout.addWidget(self.timeBox, 2, 1)
+        self.layout.addWidget(self.typeBox, 3, 1)
         self.layout.addWidget(button, 4, 1)
 
         # ----------STYLES---------
+        ldateLabel.setAlignment(Qt.AlignRight)
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:150px;}QLineEdit{max-width:300px;margin-right:50px;}QLabel{font-size:20px;margin-left:20px;max-height:30px;}")
         self.setFixedSize(500,340)
 
@@ -130,7 +140,7 @@ class ScheduleAddForm(MainForm):
 
     def confirm(self, columns):
         _id = self.get_selected_id()   
-        values = f"'{_id}','{self.date}','{self.shift.text()}','{self.position.text()}'"
+        values = f"'{_id}','{self.date}','{self.timeBox.text()}','{self.typeBox.text()}'"
         column_list = self.insert_worker(columns, values)
         query, rows = handler.select("*", self.tableName, "")
         self.replace_table(rows, column_list, "")
@@ -231,9 +241,9 @@ class WorkerForm(MainForm):
         self.button = QPushButton("Confirm")
 
         # ComboBox
-        self.type= QComboBox()
+        self.typeBox= QComboBox()
         for elem in ["Servis", "Kuhinja", "Pomocni"]:
-            self.type.addItem(elem)
+            self.typeBox.addItem(elem)
 
         # labels
         lnames = ["Ime: ", "Prezime: ", "Tip: "]
@@ -245,18 +255,18 @@ class WorkerForm(MainForm):
         # ----------LAYOUT----------
         self.layout.addWidget(self.name, 0, 1)
         self.layout.addWidget(self.surname, 1, 1)
-        self.layout.addWidget(self.type, 2, 1)
+        self.layout.addWidget(self.typeBox, 2, 1)
         self.layout.addWidget(self.button, 3, 1)
 
         # ----------STYLES---------
-        self.type.setStyleSheet("QComboBox{max-width:300px;}")
+        self.typeBox.setStyleSheet("QComboBox{max-width:300px;}")
         self.setStyleSheet("QPushButton{max-width:100px;margin-left:100px;}QLineEdit{max-width:300px;margin-right:30px;}QLabel{font-size:20px;margin-left:20px;}")
         self.setFixedSize(500,340)
 
         self.button.pressed.connect(lambda:self.confirm(columns))
 
     def confirm(self, columns):     
-        values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.type.currentText()}'"
+        values = f"'{self.name.text()}','{self.surname.text()}','00:00:00','{self.typeBox.currentText()}'"
         self.insert(columns, values)
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
