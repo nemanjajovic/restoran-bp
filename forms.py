@@ -222,7 +222,7 @@ class ReceiptForm(MainForm):
         date = date.toString("yyyy-MM-dd")
         with Connection() as handler:
             column_list, _ = handler.get_column_names(self.tableName)
-            query, rows = handler.select("*", self.tableName, f"racun_datum='{date}'")
+            query, rows = handler.select("*", self.tableName, f"racun_datum='{date}' ORDER BY racun_vrijeme")
         self.replace_table(rows, column_list, "")
         self.update_textbox(query)
 
