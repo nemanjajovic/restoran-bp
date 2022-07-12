@@ -1,4 +1,5 @@
 import pyodbc
+import socket
 
 class Connection:
     """Context manager for database connections."""
@@ -20,7 +21,7 @@ class DbHandler:
     def __init__(self):
         self.conn = pyodbc.connect(
             "Driver={SQL Server Native Client 11.0};"
-            "Server=DESKTOP-29O4L02;" # DESKTOP-29O4L02 lap: DESKTOP-1P60H2U
+            f"Server={socket.gethostname()};" # DESKTOP-29O4L02 lap: DESKTOP-1P60H2U
             "Database=BetaTest;"
             "Trusted_Connection=yes;"
         )
